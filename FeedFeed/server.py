@@ -3,9 +3,14 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash #TODO: Not sure all of these are nesessary yet, but well find out
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config["SECRET_KEY"] = os.urandom(32)
 
 #TODO: Populate this with Logic to route to Login Screen or Home Screen depending on if the user is logged into an account
 @app.route("/")
 def root():
     return ""
+
+@app.route("/home/")
+def home_page():
+    return render_template("home_page.html")
