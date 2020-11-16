@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% block title %}
+        <title>Base User Template</title>
+        {% endblock %}
+
+        {% block bootstrap %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        {% endblock %}
+
+        {% block resources %}
+        <link rel="stylesheet" type="text/css" href="/static/styles/user_style.css">
+        {% endblock %}
+    </head>
+    <body>
+        {% block navBar %}
+        <nav class="navbar static-top navbar-expand-lg navbar-dark bg-primary justify-content-between">
+                <a class="navbar-brand" href="">FeedFeed</a>
+            <div class="navItems">
+                <a class="navbar-brand" href="#">Home</a>
+                <a class="navbar-brand" href="#">My Goals</a>
+                <a class="navbar-brand" href="#">My Pantry</a>
+                <a class="navbar-brand" href="#">Daily Plan</a>
+            </div>
+
+            <button type="button" class="btn btn-outline-light">Log Out</button>
+        </nav>
+        {% endblock %}
+
+        <main id="mainContent"> 
+            {%block main %}   
+            {% endblock %}
+        </main>
+    </body>
+</html>
