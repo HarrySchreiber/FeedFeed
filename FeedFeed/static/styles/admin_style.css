@@ -1,0 +1,39 @@
+#mainContent {
+    margin-top: 50px;
+}
+
+.maxWidth-1000 {
+    max-width: 1000px;
+}
+
+.categoryLink-tall,
+.categoryLink-short {
+    border: 2px #000000 solid;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition-duration: 0.5s;
+}
+
+.categoryLink-tall:hover,
+.categoryLink-short:hover {
+    background-color: #dddddd;
+}
+
+.categoryLink-tall a,
+.categoryLink-short a {
+    color: black;
+    font-size: x-large;
+}
+
+.categoryLink-tall {
+    height: 50vw;
+    max-height: 200px;
+    
+}
+
+.categoryLink-short {
+    height: 20vw;
+    max-height: 100px;
+}
