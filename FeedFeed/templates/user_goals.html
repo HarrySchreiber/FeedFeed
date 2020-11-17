@@ -19,15 +19,13 @@
             <div class="col-lg">
                 <h2> Fitness Goals </h2> 
                 <h4> Weight Goal: </h4>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      User Weight Goal
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item" href="#">Cut</a>
-                      <a class="dropdown-item" href="#">Bulk</a>
-                      <a class="dropdown-item" href="#">Maintain</a>
-                    </div>
+                <div class="form-group">
+                    <input type="checkbox" name="cut" id="f-cut" />
+                    <label for="f-owner-read">Cut</label>
+                    <input type="checkbox" name="maintain" id="f-maintain" />
+                    <label for="f-owner-write">Maintain</label>
+                    <input type="checkbox" name="bulk" id="f-bulk"/>
+                    <label for="f-owner-execute">Bulk</label>
                 </div>
                 <h4> Exercise Goal </h4>
                 <div class="dropdown">
