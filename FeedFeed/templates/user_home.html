@@ -4,12 +4,4 @@
 {% endblock %}
 {% block main %}
 <h1> This is the main content for the user page </h1>
-{% for i in range(numItems) %}
-<div class="container-fluid">
-    <div class="flex-container">
-        <img src={{image[i]}}>
-        <h2> {{ name[i] }} </h2>
-    </div>
-</div>
-{% endfor %}
 {% endblock %}

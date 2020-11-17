@@ -13,9 +13,12 @@ def root():
 
 @app.route("/home/")
 def get_user_home():
+    '''
     conn = sqlite3.connect("Meals.db")
     c = conn.cursor()
-    rows = c.execute(''' SELECT * FROM Meals ''')
+    '''
+    #rows = c.execute(''' SELECT * FROM Meals ''')
+    '''
     info = c.fetchall()
     name = []
     ingredients = []
@@ -27,6 +30,8 @@ def get_user_home():
         image.append(info[i][2])
     return render_template("user_home.html", name=name, ingredients=ingredients, 
                             image=image, numItems=numItems)
+    '''
+    return render_template("user_home.html")
 
 @app.route("/mygoals/")
 def get_user_goals():
