@@ -3,14 +3,20 @@
 <title> Pantry </title>
 {% endblock %}
 
+{% block resources %}
+<link rel="stylesheet" type="text/css" href="/static/styles/pantry_style.css">
+{% endblock %}
+
 {% block main %}
-<div class="row">
-    <div class="col" id="search">
-        <input type="text" placeholder="Search Ingredients">
-        <button type="submit">Submit</button>
-    </div>
-    <div class="col-7" id="my_ingredients">
-        <h2> My Ingredients </h2>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg" id="search">
+            <input type="text" placeholder="Search Ingredients">
+            <button type="submit">Submit</button>
+        </div>
+        <div class="col-lg" id="my_ingredients">
+            <h2> My Ingredients </h2>
+        </div>
     </div>
 </div>
 {% endblock %}

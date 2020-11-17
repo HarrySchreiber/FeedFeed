@@ -1,0 +1,18 @@
+h2 {
+    text-align: center;
+    text-decoration: underline;
+}
+
+.col-lg {
+    background-color: lightblue;
+    margin: 1% 1.5% 1% 1.5%;
+    padding: 3%;
+}
+
+#buttons {
+    text-align: center;
+}
+
+#buttons button {
+    margin: 2%;
+}
