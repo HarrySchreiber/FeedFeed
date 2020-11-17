@@ -4,5 +4,49 @@
 {% endblock %}
 
 {% block main %}
-<h1> This will be the user goals main content </h1>
+<div id="goals">
+    <div id="personal_info" class="container">
+        <div class="row">
+            <div class="col-lg">
+                <h2> Personal Information </h2>
+                <h4> Name: </h4>
+                <h4> Age: </h4>
+                <h4> Height: </h4>
+                <input type="text" id="height" name="height">
+                <h4> Current Weight: </h4>
+                <input type="text" id="weight" name="weight">
+            </div>
+            <div class="col-lg">
+                <h2> Fitness Goals </h2> 
+                <h4> Weight Goal: </h4>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      User Weight Goal
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="#">Cut</a>
+                      <a class="dropdown-item" href="#">Bulk</a>
+                      <a class="dropdown-item" href="#">Maintain</a>
+                    </div>
+                </div>
+                <h4> Exercise Goal </h4>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      User Exercise Goal
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="#">Sedentary</a>
+                      <a class="dropdown-item" href="#">Mild Exercise</a>
+                      <a class="dropdown-item" href="#">Athlete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="button_menu" class="container-fluid">
+        <button type="button" class="btn btn-primary btn-lg">Change Username</button>
+        <button type="button" class="btn btn-primary btn-lg">Change Password</button>
+        <button type="button" class="btn btn-primary btn-lg">Save Changes</button>
+    </div>
+</div>
 {% endblock %}

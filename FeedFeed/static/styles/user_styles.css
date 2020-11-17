@@ -6,3 +6,24 @@
 .container-fluid {
     margin: 3%;
 }
+
+div h2 {
+    text-decoration: underline;
+    text-align: center;
+}
+
+.row div {
+    background-color: lightblue;
+    margin: 1% 1.5% 1% 1.5%;
+    padding: 3%;
+}
+
+#button_menu {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#button_menu button {
+    margin: 1% 5% 1% 5%;
+}
