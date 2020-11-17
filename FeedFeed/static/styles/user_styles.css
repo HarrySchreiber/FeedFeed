@@ -1,0 +1,8 @@
+.flex-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.container-fluid {
+    margin: 3%;
+}

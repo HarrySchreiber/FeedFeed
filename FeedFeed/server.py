@@ -6,8 +6,6 @@ import sqlite3
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
 
-conn = sqlite3.connect
-
 #TODO: Populate this with Logic to route to Login Screen or Home Screen depending on if the user is logged into an account
 @app.route("/")
 def root():
@@ -15,7 +13,20 @@ def root():
 
 @app.route("/home/")
 def get_user_home():
-    return render_template("user_home.html")
+    conn = sqlite3.connect("Meals.db")
+    c = conn.cursor()
+    rows = c.execute(''' SELECT * FROM Meals ''')
+    info = c.fetchall()
+    name = []
+    ingredients = []
+    image = []
+    numItems = len(info)
+    for i in range(len(info)):
+        name.append(info[i][0])
+        ingredients.append(info[i][1])
+        image.append(info[i][2])
+    return render_template("user_home.html", name=name, ingredients=ingredients, 
+                            image=image, numItems=numItems)
 
 @app.route("/mygoals/")
 def get_user_goals():
