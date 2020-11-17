@@ -1,0 +1,36 @@
+{%extends "login_signup_base.html"%}
+
+{% block title %}
+Login/Signup
+{% endblock %}
+
+{%block cssandjavascript%}
+<link rel="stylesheet" href="/static/styles/login_signup.css">
+<script src="/static/scripts/login_signup.js"></script>
+{%endblock%}
+
+{%block forms%}
+<div class="row">
+    <div class="col">
+        <input type="radio" id="sign-up-radio" name="sign-up-or-log-in" value="sign-up">
+        <label for="sign-up-radio">Sign Up</label><br>
+    </div>
+    <div class="col">
+        <input type="radio" id="log-in-radio" name="sign-up-or-log-in" value="log-in" checked>
+        <label for="log-in-radio">Log In</label><br>
+    </div>
+</div>
+<div class="row">
+    <form id="login-form" style="display: block;">
+        <input class="form-control" type="email" name="login-email" placeholder="Email" required>
+        <input class="form-control" type="password" name="login-password" placeholder="Password" required>
+        <input class="form-control" type="submit" name="login-button" value="Log In">
+    </form>
+    <form id="signup-form" style="display: none;">
+        <input class="form-control" type="email" name="signup-email" placeholder="Email" required>
+        <input class="form-control" type="password" name="signup-password" placeholder="Password" required>
+        <input class="form-control" type="password" name="signup-confirm-password" placeholder="Re-Enter Password" required>
+        <input class="form-control" type="submit" name="signup-button" value="Sign Up">
+    </form>
+</div>
+{%endblock%}
