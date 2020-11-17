@@ -38,16 +38,25 @@
 tr {
     border-style: solid;
     border-color: black;
-    border-width: thick;
+    border-width: thin;
     background-color: lightgray;
     margin: 1% 0% 1% 0%;
+}
+
+tr:hover {
+    background-color: lightblue;
 }
 
 table {
     width: 100%;
 }
 
+td {
+    width: auto;
+}
+
 img {
     width: 555px;
     height: 370px;
+    padding: 1%;
 }
