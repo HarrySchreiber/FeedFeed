@@ -14,12 +14,17 @@ table {
     width: 100%;
 }
 
-td {
-    width: auto;
-}
-
 img {
     width: 555px;
     height: 370px;
     padding: 1%;
+}
+
+.meal-image {
+    width: 600px;
+}
+
+td h2 {
+    text-align: center;
+    text-decoration: underline;
 }
