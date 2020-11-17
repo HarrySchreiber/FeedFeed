@@ -7,11 +7,6 @@
     margin: 3%;
 }
 
-div h2 {
-    text-decoration: underline;
-    text-align: center;
-}
-
 .row div {
     background-color: lightblue;
     margin: 1% 1.5% 1% 1.5%;
@@ -26,4 +21,28 @@ div h2 {
 
 #button_menu button {
     margin: 1% 5% 1% 5%;
+}
+
+#search {
+    background-color: lightblue;
+    padding: 1%;
+    text-align: center;
+}
+
+#my_ingredients {
+    background-color: lightblue;
+    padding: 1%;
+    text-align: center;
+}
+
+tr {
+    border-style: solid;
+    border-color: black;
+    border-width: thick;
+    background-color: lightgray;
+    margin: 1% 0% 1% 0%;
+}
+
+table {
+    width: 100%;
 }
