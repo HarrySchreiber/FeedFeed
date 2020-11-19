@@ -7,18 +7,39 @@ Login/Signup
 {%block cssandjavascript%}
 <link rel="stylesheet" href="/static/styles/login_signup.css">
 <script src="/static/scripts/login_signup.js"></script>
+<style>
+    #login-signup-table{
+        width: 100%;
+    }
+    
+    #login-table-cell{
+        width: 50%;
+        text-align: center;
+        border-left: 1px solid black;
+    }
+    
+    #signup-table-cell{
+        width: 50%;
+        text-align: center;
+        border-right: 1px solid black;
+    }
+</style>
 {%endblock%}
 
 {%block forms%}
 <div class="row">
-    <div class="col">
-        <input type="radio" id="sign-up-radio" name="sign-up-or-log-in" value="sign-up">
-        <label for="sign-up-radio">Sign Up</label><br>
-    </div>
-    <div class="col">
-        <input type="radio" id="log-in-radio" name="sign-up-or-log-in" value="log-in" checked>
-        <label for="log-in-radio">Log In</label><br>
-    </div>
+    <table id="login-signup-table">
+        <tr>
+            <td id="signup-table-cell">
+                <input type="radio" id="sign-up-radio" name="sign-up-or-log-in" value="sign-up" hidden>
+                <label for="sign-up-radio">Sign Up</label><br>
+            </td>
+            <td id="login-table-cell">
+                <input type="radio" id="log-in-radio" name="sign-up-or-log-in" value="log-in" checked hidden>
+                <label for="log-in-radio">Log In</label><br>
+            </td>
+        </tr>
+    </table>
 </div>
 <div class="row">
     <form id="login-form" style="display: block;">

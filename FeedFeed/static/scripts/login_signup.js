@@ -10,6 +10,10 @@ function toggle_login(){
     login_form.style.display = "block";
     let signup_form = document.getElementById("signup-form");
     signup_form.style.display = "none";
+    let login_table_cell = document.getElementById("login-table-cell");
+    login_table_cell.style.borderBottom = "1px solid white";
+    let signup_table_cell = document.getElementById("signup-table-cell");
+    signup_table_cell.style.borderBottom = "1px solid black";
 }
 
 function toggle_signup(){
@@ -17,4 +21,8 @@ function toggle_signup(){
     login_form.style.display = "none";
     let signup_form = document.getElementById("signup-form");
     signup_form.style.display =  "block";
+    let login_table_cell = document.getElementById("login-table-cell");
+    login_table_cell.style.borderBottom = "1px solid black";
+    let signup_table_cell = document.getElementById("signup-table-cell");
+    signup_table_cell.style.borderBottom = "1px solid white";
 }
