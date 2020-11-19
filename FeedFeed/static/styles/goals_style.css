@@ -22,3 +22,8 @@ h2 {
 #buttons button {
     margin: 2%;
 }
+
+.height-input {
+    display: flex;
+    flex-direction: row;
+}
