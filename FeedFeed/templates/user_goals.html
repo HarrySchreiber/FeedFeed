@@ -5,6 +5,7 @@
 
 {% block resources %}
 <link rel="stylesheet" type="text/css" href="/static/styles/goals_style.css">
+<script src="/static/scripts/goals_script.js"></script>
 {% endblock %}
 
 {% block main %}
@@ -51,9 +52,9 @@
 
 <div class="container-fluid">
     <div class="col" id="buttons">
-        <button type="button" class="btn btn-primary btn-lg">Change Username</button>
-        <button type="button" class="btn btn-primary btn-lg">Change Password</button>
-        <button type="button" class="btn btn-primary btn-lg">Save Changes</button>
+        <button type="button" id="username_button" class="btn btn-primary btn-lg">Change Username</button>
+        <button type="button" id="password_button" class="btn btn-primary btn-lg">Change Password</button>
+        <button type="button" id="save_button" class="btn btn-primary btn-lg">Save Changes</button>
     </div>
 </div>
 
