@@ -33,8 +33,17 @@ def get_user_home():
     '''
     return render_template("user_home.html")
 
-@app.route("/mygoals/")
+@app.route("/mygoals/", methods=["GET"])
 def get_user_goals():
+    return render_template("user_goals.html")
+
+@app.route("/mygoals/", methods=["POST"])
+def post_user_goals():
+    data = dict()
+    fields = ["height-feet", "height-inches", "weight"]
+    for field in fields:
+        data[field] = request.form.get(field)
+    #Need to write information to database
     return render_template("user_goals.html")
 
 @app.route("/mypantry/")

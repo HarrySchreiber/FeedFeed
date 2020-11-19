@@ -9,53 +9,54 @@
 {% endblock %}
 
 {% block main %}
-<div class="container-fluid">
-    <div class="row">
-      <div class="col-lg">
-        <h2> Personal Information </h2>
-        <h4> Name: </h4>
-        <h4> Age: </h4>
-        <h4> Height: </h4>
-        <div class="height-input">
-            <input type="text" id="height-feet" name="height-feet" placeholder="Feet">
-            <input type="text" id="height-inches" name="height-inches" placeholder="Inches">
-        </div>
-        <h4> Current Weight: </h4>
-        <input type="text" id="weight" name="weight" placeholder="Current Weight">
-      </div>
-      <div class="col-lg">
-        <h2> Fitness Goals </h2>
-        <h4> Weight Goal: </h4>
-        <div class="form-group">
-            <input type="checkbox" name="cut" id="f-cut" />
-            <label for="f-cut">Cut</label>
-            <input type="checkbox" name="maintain" id="f-maintain" />
-            <label for="f-maintain">Maintain</label>
-            <input type="checkbox" name="bulk" id="f-bulk"/>
-            <label for="f-bulk">Bulk</label>
-        </div>
-        <h4> Exercise Goal </h4>
-        <div class="form-group">
-            <div class="form-group">
-                <input type="checkbox" name="cut" id="f-sedentary" />
-                <label for="f-sedentary">Sedentary</label>
-                <input type="checkbox" name="mild" id="f-mild" />
-                <label for="f-mild">Mild Exercise</label>
-                <input type="checkbox" name="bulk" id="f-active"/>
-                <label for="f-active">Active</label>
+<form method="post" action="/mygoals/">
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg">
+            <h2> Personal Information </h2>
+            <h4> Name: </h4>
+            <h4> Age: </h4>
+            <h4> Height: </h4>
+            <div class="height-input">
+                <input type="text" id="height-feet" name="height-feet" placeholder="Feet">
+                <input type="text" id="height-inches" name="height-inches" placeholder="Inches">
             </div>
+            <h4> Current Weight: </h4>
+            <input type="text" id="weight" name="weight" placeholder="Current Weight">
+          </div>
+          <div class="col-lg">
+            <h2> Fitness Goals </h2>
+            <h4> Weight Goal: </h4>
+            <div class="form-group">
+                <input type="checkbox" name="cut" id="f-cut" />
+                <label for="f-cut">Cut</label>
+                <input type="checkbox" name="maintain" id="f-maintain" />
+                <label for="f-maintain">Maintain</label>
+                <input type="checkbox" name="bulk" id="f-bulk"/>
+                <label for="f-bulk">Bulk</label>
+            </div>
+            <h4> Exercise Goal </h4>
+            <div class="form-group">
+                <div class="form-group">
+                    <input type="checkbox" name="cut" id="f-sedentary" />
+                    <label for="f-sedentary">Sedentary</label>
+                    <input type="checkbox" name="mild" id="f-mild" />
+                    <label for="f-mild">Mild Exercise</label>
+                    <input type="checkbox" name="bulk" id="f-active"/>
+                    <label for="f-active">Active</label>
+                </div>
+            </div>
+            <p> According to your height, weight, and exercise goal, your basal metabolic rate (BMR) is _____ calories per day. </p>
+            <p> In order to meet your weight goal, it is recommended you eat _____ calories per day </p>
         </div>
-        <p> According to your height, weight, and exercise goal, your basal metabolic rate (BMR) is _____ calories per day. </p>
-        <p> In order to meet your weight goal, it is recommended you eat _____ calories per day </p>
     </div>
-</div>
-
-<div class="container-fluid">
-    <div class="col" id="buttons">
-        <button type="button" id="username_button" class="btn btn-primary btn-lg">Change Username</button>
-        <button type="button" id="password_button" class="btn btn-primary btn-lg">Change Password</button>
-        <button type="button" id="save_button" class="btn btn-primary btn-lg">Save Changes</button>
+    
+    <div class="container-fluid">
+        <div class="col" id="buttons">
+            <button type="button" id="username_button" class="btn btn-primary btn-lg">Change Username</button>
+            <button type="button" id="password_button" class="btn btn-primary btn-lg">Change Password</button>
+            <button type="submit" id="save_button" class="btn btn-primary btn-lg">Save Changes</button>
+        </div>
     </div>
-</div>
-
+</form>
 {% endblock %}
