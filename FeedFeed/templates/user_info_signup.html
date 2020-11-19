@@ -1,0 +1,51 @@
+{%extends "login_signup_base.html"%}
+
+{% block title %}
+About You
+{% endblock %}
+
+{%block cssandjavascript%}
+<link rel="stylesheet" href="/static/styles/login_signup.css">
+<style>
+    .container{
+        height: 25em;
+    }
+    input[type=radio]{
+        visibility: visible;
+    }
+</style>
+{%endblock%}
+
+{%block forms%}
+<div class="row">
+    <form id="user-info-signup">
+        <label for="name">Name</label>
+        <input class="form-control" type="text" id="name" placeholder="Name" required>
+        <label for="date-of-birth">Date of Birth</label>
+        <input class="form-control" type="date" id="date-of-birth" placeholder="Date of Birth" required>
+        <label for="height">Height</label>
+        <div class="row">
+            <div class="col">
+                <input class="form-control" type="number" id="height-feet" placeholder="Feet" required>
+            </div>
+            <div class="col">
+                <input class="form-control" type="number" id="height-inches" placeholder="Inches" required>
+            </div>
+        </div>
+        <label for="weight">Weight</label>
+        <input class="form-control" type="number" id="weight" placeholder="Weight (lbs)" required>
+        <label for="gender">Gender</label>
+        <div class="row">
+            <div class="col">
+                <input class="form-control" type="radio" id="male-gender" name="gender" value="male">
+                <label for="male-gender">Male</label><br>
+            </div>
+            <div class="col">
+                <input class="form-control" type="radio" id="female-gender" name="gender" value="female">
+                <label for="female-gender">Female</label><br>
+            </div>
+        </div>
+        <input type="submit" value="Next">
+    </form>
+</div>
+{%endblock%}
