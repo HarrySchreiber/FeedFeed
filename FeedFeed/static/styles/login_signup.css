@@ -18,6 +18,6 @@ input[type=radio]{
     visibility: hidden;
 }
 
-.input-group{
-    text-align: center;
+form{
+    width: 100%;
 }
