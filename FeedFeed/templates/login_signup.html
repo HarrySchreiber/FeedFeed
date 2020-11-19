@@ -23,6 +23,10 @@ Login/Signup
         text-align: center;
         border-right: 1px solid black;
     }
+    
+    td:hover{
+        background-color: lightgray;
+    }
 </style>
 {%endblock%}
 
@@ -30,13 +34,13 @@ Login/Signup
 <div class="row">
     <table id="login-signup-table">
         <tr>
-            <td id="signup-table-cell">
+            <td id="signup-table-cell" style="border-bottom: 1px solid black;">
                 <input type="radio" id="sign-up-radio" name="sign-up-or-log-in" value="sign-up" hidden>
-                <label for="sign-up-radio">Sign Up</label><br>
+                <label for="sign-up-radio" style="width: 100%;">Sign Up</label><br>
             </td>
             <td id="login-table-cell">
                 <input type="radio" id="log-in-radio" name="sign-up-or-log-in" value="log-in" checked hidden>
-                <label for="log-in-radio">Log In</label><br>
+                <label for="log-in-radio" style="width: 100%;">Log In</label><br>
             </td>
         </tr>
     </table>
