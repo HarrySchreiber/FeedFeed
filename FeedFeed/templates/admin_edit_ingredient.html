@@ -1,0 +1,73 @@
+{% extends "admin_base.html" %}
+
+{% block main %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">
+                    &times;
+                </button>
+                {{ message }}
+            </div>
+    {% endfor %}
+    <h1 class="text-center py-3">{{action}} Ingredient</h1>
+
+    <form action="{{url_for('adminEditIngredientPost')}}" method="POST">
+
+        {% if action == "Edit" %}
+        <input type="hidden" id="ingId" name="id" placeholder="Name" value="{{ingredient.id}}">
+        <div class="form-group">
+            <input type="text" class="form-control" id="ingName" name="ingName" placeholder="Name" value="{{ingredient.name}}" readonly>
+        </div>
+        <div class="form-group form-check">
+            {% if ingredient.isMeal %}
+            <input type="checkbox" class="form-check-input" id="isMeal" name="isMeal" checked>
+            {% else %}
+            <input type="checkbox" class="form-check-input" id="isMeal" name="isMeal">
+            {% endif %}
+            <label class="form-check-label" for="isMeal">Is Meal</label>
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="ingCal" name="calories" placeholder="Calories / oz" value="{{ingredient.calories}}" required min="0" step="0.001">
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="ingProt" name="protein" placeholder="Protein / oz" value="{{ingredient.protein}}" required min="0" step="0.001">
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="ingCarb" name="carbs" placeholder="Carbs / oz" value="{{ingredient.carbs}}" required min="0" step="0.001">
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="ingFat" name="fat" placeholder="Fat / oz" value="{{ingredient.fat}}" required min="0" step="0.001">
+        </div>
+
+        {% else %}
+        <input type="hidden" class="form-control" id="ingId" name="id" placeholder="Name" value="-1">
+        <div class="form-group">
+            <input type="text" class="form-control" id="ingName" name="ingName" placeholder="Name" required>
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="isMeal" name="isMeal">
+            <label class="form-check-label" for="isMeal">Is Meal</label>
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="ingCal" name="calories" placeholder="Calories / oz" required min="0" step="0.001">
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="ingProt" name="protein" placeholder="Protein / oz" required min="0" step="0.001">
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="ingCarb" name="carbs" placeholder="Carbs / oz" required min="0" step="0.001">
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="ingFat" name="fat" placeholder="Fat / oz" required min="0" step="0.001">
+        </div>
+
+        {% endif %}
+
+        <div class="row justify-content-end mx-0">
+            <a id="cancel-button" class="col-lg-1 btn btn-secondary mr-2 mb-2" href="{{backLink}}">Cancel</a>
+            <button id="submit-button" class="col-lg-1 btn btn-primary mb-2" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

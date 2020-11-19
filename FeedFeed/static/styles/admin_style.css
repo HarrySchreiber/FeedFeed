@@ -37,3 +37,13 @@
     height: 20vw;
     max-height: 100px;
 }
+
+.newItemButton {
+    max-width: 200px;
+}
+
+/* DATA TABLE STYLES */
+
+#data-table tr.tData {
+
+}
