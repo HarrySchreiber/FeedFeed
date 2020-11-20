@@ -42,8 +42,8 @@
     max-width: 200px;
 }
 
-/* DATA TABLE STYLES */
-
-#data-table tr.tData {
-
+/* Edit meal ingredient list styles */
+#ingTableCont {
+    max-height: 60vh;
+    overflow-y: auto;
 }

@@ -2,6 +2,45 @@
 
 {% block main %}
 <div class="container">
+    {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">
+                    &times;
+                </button>
+                {{ message }}
+            </div>
+    {% endfor %}
     <h1 class="text-center py-3">Manage Meals</h1>
+    <div class="row justify-content-end mb-2">
+        <a class="btn btn-primary newItemButton" href="{{url_for('adminEditMeal')}}?action=New">+ Add New</a>
+    </div>
+    <table id="data-table" class="table table-hover">
+        <tbody>
+            <tr class="tHead">
+                <th><input type="checkbox"></th>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Calories/serving</th>
+                <th>Serves</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for id, val in tableData.items() %}
+            <tr class="tData">
+                <td><input class="dataCheck" name="{{id}}" type="checkbox"></td>
+                <td><img src="data:;base64,{{ val.image }}"></td>
+                <td>{{val.name}}</td>
+                <td>{{val.description}}</td>
+                <td>{{val.caloriesPerServing}}</td>
+                <td>{{val.serves}}</td>
+                <td>
+                    <a class="btn btn-primary" href="{{url_for('adminEditMeal')}}?action=Edit&id={{id}}">Edit</a>
+                    <button class="btn btn-secondary">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

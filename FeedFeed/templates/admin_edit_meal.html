@@ -1,0 +1,118 @@
+{% extends "admin_base.html" %}
+
+{% block resources %}
+{{super()}}
+<script src="/static/scripts/editMeal.js"></script>
+<script src="/static/scripts/data_explorer_script.js"></script>
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">
+                    &times;
+                </button>
+                {{ message }}
+            </div>
+    {% endfor %}
+    <h1 class="text-center py-3">{{action}} Meal</h1>
+
+    <form action="{{url_for('adminEditMealPost')}}" method="POST">
+
+        {% if action == "Edit" %}
+        <input type="hidden" id="ingId" name="id" placeholder="Name" value="{{meal.id}}">
+        <div class="form-group">
+            <input type="text" class="form-control" id="mealName" name="mealName" placeholder="Name" value="{{meal.name}}" readonly>
+        </div>
+        <div class="form-group">
+            <textarea class="form-control" id="description" name="description" placeholder="Description" value="{{meal.description}}"></textarea>
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="mealServes" name="mealServes" placeholder="Serves" value="{{meal.serves}}" required min="0" step="0.001">
+        </div>
+        <div class="form-group">
+            <input type="number" class="form-control" id="caloriesPer" name="caloriesPer" value="{{meal.caloriesPerServing}}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="imageUpload">Upload Image</label>
+            <input type="file" class="form-control-file" name="imageUpload" id="imageUpload" accept=".png,.jpg" required>
+        </div>
+
+        {% else %}
+        <div class="row">
+            <div class="col-6">
+                <input type="hidden" id="ingId" name="id" placeholder="Name" value="-1">
+                <div class="form-group">
+                    <label for="mealName">Name</label>
+                    <input type="text" class="form-control" id="mealName" name="mealName" placeholder="Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Meal Description</label>
+                    <textarea class="form-control" id="description" name="description" placeholder="Instructions, link to recipe, etc."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="mealServes">Serves</label>
+                    <input type="number" class="form-control" id="mealServes" name="mealServes" placeholder="Serves" required min="0" step="1">
+                </div>
+                <div class="form-group">
+                    <label for="caloriesPer">Calories Per Serving</label>
+                    <input type="number" class="form-control" id="caloriesPer" name="caloriesPer" value="0" step="0.001" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="imageUpload">Upload Image</label>
+                    <input type="file" class="form-control-file" name="imageUpload" id="imageUpload" accept=".png,.jpg" required>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <label>Ingredients</label>
+                <div id="ingTableCont">
+                    <table id="ingTable">
+                        <tr class="ingSelection">
+                            <td>
+                                <div class="form-group">
+                                    <input type="number" class="form-control ing" name="quantity[]" min="0" step="0.001" required>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control ing" name="units[]" required>
+                                        <option value="" disabled selected>Unit</option>
+                                        {% for unit in unitOpts %}
+                                        <option value="{{unit}}">{{unit}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <select class="form-control ing" name="ingredients[]" required>
+                                        <option value="" disabled selected>Ingredient</option>
+                                        {% for id, ing in ingredientOpts.items() %}
+                                        <option class="ingOption" value="{{id}}" data-calCount="{{ing.calories}}">{{ing.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-outline-danger removeIng" disabled>Remove</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <button type="button" id="AddIngredient" class="btn btn-primary">Add Ingredient</button>
+            </div>
+        </div>
+
+        {% endif %}
+
+        <div class="row justify-content-end mx-0">
+            <a id="cancel-button" class="col-lg-1 btn btn-secondary mr-2 mb-2" href="{{backLink}}">Cancel</a>
+            <button id="submit-button" class="col-lg-1 btn btn-primary mb-2" type="submit">Save</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

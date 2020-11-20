@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort #TODO: Not sure all of these are nesessary yet, but well find out
 import sqlite3
 
-from feedFeedData import Ingredient
+from feedFeedData import Ingredient, Meal, unitOpts
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -44,11 +44,64 @@ def adminHome():
 
 @app.route("/dash/meals/")
 def adminMealManager():
+    mealData = dict()
+
+    c = get_db().cursor()
+
+    t = c.execute("""
+        SELECT id, name, description, image, serves, calories_per_serving FROM Meal;
+    """).fetchall()
+
+    for record in t:
+        mealData[record[0]] = Meal(record[0], record[1], record[2], record[3], record[4], record[5])
+
     return render_template("admin_meals.html",
                             username="Administrator",
                             uiSectionName="Meals",
                             showBackButton=True,
-                            backLink=url_for("adminHome"))
+                            backLink=url_for("adminHome"),
+                            tableData = mealData)
+
+@app.route("/dash/meals/edit/", methods=["GET"])
+def adminEditMeal():
+    ingData = dict()
+
+    args = request.args
+
+    c = get_db().cursor()
+
+    #If an action was specified and valid, use that. Otherwise, "New"
+    if "action" in args:
+        if args["action"] == "New" or args["action"] == "Edit":
+            action = args["action"]
+    else:
+        action = "New"
+
+    t = c.execute("""
+        SELECT id, name, calories, protein, carbs, fat FROM Ingredient;
+    """).fetchall()
+
+    for record in t:
+        ingData[record[0]] = Ingredient(record[0], record[1], record[2], record[3], record[4], record[5], False)
+
+    if action == "New":
+        return render_template("admin_edit_meal.html",
+                                username="Administrator",
+                                uiSectionName=f"{action} Meal",
+                                showBackButton=True,
+                                backLink=url_for("adminMealManager"),
+                                action=action,
+                                unitOpts = unitOpts,
+                                ingredientOpts=ingData)
+    elif action == "Edit":
+        flash("Action not implemented yet")
+        return redirect(url_for("adminMealManager"))
+    
+    abort(404)
+
+@app.route("/dash/meals/edit/", methods=["POST"])
+def adminEditMealPost():
+    return redirect(url_for("adminMealManager"))
 
 #Displays all the ingredients in the database in a readable format and provides management options
 @app.route("/dash/ingredients/")
