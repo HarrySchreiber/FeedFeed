@@ -8,10 +8,21 @@ About You
 <link rel="stylesheet" href="/static/styles/login_signup.css">
 <style>
     .container{
-        height: 15em;
+        height: 13.5em;
+        padding-left: 2em;
+        padding-right: 2em;
+        padding-top: 1em;
     }
     input[type=radio]{
         visibility: visible;
+        margin-bottom: 1em;
+    }
+    .form-control{
+        margin-top: 0%;
+        width: 100%;
+    }
+    label{
+        margin-bottom: 0%;
     }
 </style>
 {%endblock%}
@@ -21,11 +32,11 @@ About You
     <form id="goal-info-signup">
         <label for="weight-goal">Weight Goal</label>
         <div class="row">
-            <div class="col">
+            <div class="col-sm-4">
                 <input type="radio" id="cut-radio-button" name="weight-goal" value="cut">
                 <label for="cut-radio-button">Cut</label><br>
             </div>
-            <div class="col">
+            <div class="col-sm-5">
                 <input type="radio" id="maintain-radio-button" name="weight-goal" value="maintain">
                 <label for="maintain-radio-button">Maintain</label><br>
             </div>
@@ -34,16 +45,15 @@ About You
                 <label for="bulk-radio-button">Bulk</label><br>
             </div>
         </div>
-        <div class="row">
-            <label for="excercise-goal-box">Excercise Goal</label><br>
-            <select class="form-control" id="excercise-goal-box">
-                <option value=1.2>Sedentary</option>
-                <option value=1.375>Lightly Active (1-3 times a week)</option>
-                <option value=1.55>Moderatly Active (3-5 times a week)</option>
-                <option value=1.725>Very Active (6-7 times a week)</option>
-                <option value=1.9>Very Active (6-7 times a week) and work a physically demanding job</option>
-            </select>
-        </div>
+        <label for="excercise-goal-box">Excercise Goal</label><br>
+        <select class="form-control" id="excercise-goal-box">
+            <option value=1.2>Sedentary</option>
+            <option value=1.375>Lightly Active (1-3 times a week)</option>
+            <option value=1.55>Moderatly Active (3-5 times a week)</option>
+            <option value=1.725>Very Active (6-7 times a week)</option>
+            <option value=1.9>Very Active (6-7 times a week) and work a physically demanding job</option>
+        </select>
+        <input class="form-control" type="submit" value="Create Account">
     </form>
 </div>
 {%endblock%}
