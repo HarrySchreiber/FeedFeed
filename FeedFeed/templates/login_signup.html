@@ -1,0 +1,61 @@
+{%extends "login_signup_base.html"%}
+
+{% block title %}
+Login/Signup
+{% endblock %}
+
+{%block cssandjavascript%}
+<link rel="stylesheet" href="/static/styles/login_signup.css">
+<script src="/static/scripts/login_signup.js"></script>
+<style>
+    #login-signup-table{
+        width: 100%;
+    }
+    
+    #login-table-cell{
+        width: 50%;
+        text-align: center;
+        border-left: 1px solid black;
+    }
+    
+    #signup-table-cell{
+        width: 50%;
+        text-align: center;
+        border-right: 1px solid black;
+    }
+    
+    td:hover{
+        background-color: lightgray;
+    }
+</style>
+{%endblock%}
+
+{%block forms%}
+<div class="row">
+    <table id="login-signup-table">
+        <tr>
+            <td id="signup-table-cell" style="border-bottom: 1px solid black;">
+                <input type="radio" id="sign-up-radio" name="sign-up-or-log-in" value="sign-up" hidden>
+                <label for="sign-up-radio" style="width: 100%;">Sign Up</label><br>
+            </td>
+            <td id="login-table-cell">
+                <input type="radio" id="log-in-radio" name="sign-up-or-log-in" value="log-in" checked hidden>
+                <label for="log-in-radio" style="width: 100%;">Log In</label><br>
+            </td>
+        </tr>
+    </table>
+</div>
+<div class="row">
+    <form id="login-form" style="display: block;" action="{{url_for('login_post')}}" method="POST">
+        <input class="form-control" type="email" name="login-email" placeholder="Email" required>
+        <input class="form-control" type="password" name="login-password" placeholder="Password" required>
+        <input class="form-control" type="submit" name="login-button" value="Log In">
+    </form>
+    <form id="signup-form" style="display: none;" action="{{url_for('signup_post')}}" method="POST">
+        <input class="form-control" type="email" name="signup-email" placeholder="Email" required>
+        <input class="form-control" type="password" name="signup-password" placeholder="Password" required>
+        <input class="form-control" type="password" name="signup-confirm-password" placeholder="Re-Enter Password" required>
+        <input class="form-control" type="submit" name="signup-button" value="Sign Up">
+    </form>
+</div>
+{%endblock%}

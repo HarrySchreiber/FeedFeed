@@ -1,0 +1,62 @@
+{%extends "login_signup_base.html"%}
+
+{% block title %}
+About You
+{% endblock %}
+
+{%block cssandjavascript%}
+<link rel="stylesheet" href="/static/styles/login_signup.css">
+<style>
+    .container{
+        height: 28em;
+        padding-left: 2em;
+        padding-right: 2em;
+        padding-top: 1em;
+    }
+    input[type=radio]{
+        visibility: visible;
+        margin-bottom: 1em;
+    }
+    .form-control{
+        margin-top: 0%;
+        width: 100%;
+    }
+    label{
+        margin-bottom: 0%;
+    }
+</style>
+{%endblock%}
+
+{%block forms%}
+<div class="row">
+    <form id="user-info-signup" action="{{url_for('signup_info_post')}}" method="POST">
+        <label for="name">Name</label>
+        <input class="form-control" type="text" id="name" name="name" placeholder="Name" required>
+        <label for="date-of-birth">Date of Birth</label>
+        <input class="form-control" type="date" id="date-of-birth" name="date-of-birth" placeholder="Date of Birth" required>
+        <label for="height">Height</label>
+        <div class="row">
+            <div class="col">
+                <input class="form-control" type="number" id="height-feet" name="height-feet" placeholder="Feet" required>
+            </div>
+            <div class="col">
+                <input class="form-control" type="number" id="height-inches" name="height-inches" placeholder="Inches" required>
+            </div>
+        </div>
+        <label for="weight">Weight</label>
+        <input class="form-control" type="number" name="weight" id="weight" placeholder="Weight (lbs)" required>
+        <label for="gender">Gender</label>
+        <div class="row">
+            <div class="col-sm-6">
+                <input type="radio" id="male-gender" name="gender" value="male" required>
+                <label for="male-gender">Male</label><br>
+            </div>
+            <div class="col-sm-6">
+                <input type="radio" id="female-gender" name="gender" value="female" required>
+                <label for="female-gender">Female</label><br>
+            </div>
+        </div>
+        <input class="form-control" type="submit" value="Next">
+    </form>
+</div>
+{%endblock%}
