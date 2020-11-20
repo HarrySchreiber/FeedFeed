@@ -3,6 +3,55 @@
 <title> Goals </title>
 {% endblock %}
 
+{% block resources %}
+<link rel="stylesheet" type="text/css" href="/static/styles/goals_style.css">
+{% endblock %}
+
 {% block main %}
-<h1> This will be the user goals main content </h1>
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-lg">
+        <h2> Personal Information </h2>
+        <h4> Name: </h4>
+        <h4> Age: </h4>
+        <h4> Height: </h4>
+        <input type="text" id="height" name="height">
+        <h4> Current Weight: </h4>
+        <input type="text" id="weight" name="weight">
+      </div>
+      <div class="col-lg">
+        <h2> Fitness Goals </h2>
+        <h4> Weight Goal: </h4>
+        <div class="form-group">
+            <input type="checkbox" name="cut" id="f-cut" />
+            <label for="f-owner-read">Cut</label>
+            <input type="checkbox" name="maintain" id="f-maintain" />
+            <label for="f-owner-write">Maintain</label>
+            <input type="checkbox" name="bulk" id="f-bulk"/>
+            <label for="f-owner-execute">Bulk</label>
+        </div>
+        <h4> Exercise Goal </h4>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                User Exercise Goal
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Sedentary</a>
+                <a class="dropdown-item" href="#">Mild Exercise</a>
+                <a class="dropdown-item" href="#">Athlete</a>
+            </div>
+        </div>
+        <p> According to your height, weight, and exercise goal, your basal metabolic rate (BMR) is _____ calories per day. </p>
+        <p> In order to meet your weight goal, it is recommended you eat _____ calories per day </p>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="col" id="buttons">
+        <button type="button" class="btn btn-primary btn-lg">Change Username</button>
+        <button type="button" class="btn btn-primary btn-lg">Change Password</button>
+        <button type="button" class="btn btn-primary btn-lg">Save Changes</button>
+    </div>
+</div>
+
 {% endblock %}

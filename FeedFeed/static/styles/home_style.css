@@ -1,0 +1,30 @@
+tr {
+    border-style: solid;
+    border-color: black;
+    border-width: thin;
+    background-color: lightgray;
+    margin: 1% 0% 1% 0%;
+}
+
+tr:hover {
+    background-color: lightblue;
+}
+
+table {
+    width: 100%;
+}
+
+img {
+    width: 555px;
+    height: 370px;
+    padding: 1%;
+}
+
+.meal-image {
+    width: 600px;
+}
+
+td h2 {
+    text-align: center;
+    text-decoration: underline;
+}
