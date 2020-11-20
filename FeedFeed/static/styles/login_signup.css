@@ -1,5 +1,5 @@
 .container{
-    height: 20em;
+    height: 17em;
     width: 20em;
     border: 1px solid black;
 }
@@ -20,4 +20,11 @@ input[type=radio]{
 
 form{
     width: 100%;
+}
+
+.form-control{
+    width: 90%;
+    margin: auto;
+    margin-bottom: 1em;
+    margin-top: 1em;
 }

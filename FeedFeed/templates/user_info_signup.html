@@ -8,10 +8,21 @@ About You
 <link rel="stylesheet" href="/static/styles/login_signup.css">
 <style>
     .container{
-        height: 25em;
+        height: 28em;
+        padding-left: 2em;
+        padding-right: 2em;
+        padding-top: 1em;
     }
     input[type=radio]{
         visibility: visible;
+        margin-bottom: 1em;
+    }
+    .form-control{
+        margin-top: 0%;
+        width: 100%;
+    }
+    label{
+        margin-bottom: 0%;
     }
 </style>
 {%endblock%}
@@ -36,16 +47,16 @@ About You
         <input class="form-control" type="number" id="weight" placeholder="Weight (lbs)" required>
         <label for="gender">Gender</label>
         <div class="row">
-            <div class="col">
-                <input class="form-control" type="radio" id="male-gender" name="gender" value="male">
+            <div class="col-sm-6">
+                <input type="radio" id="male-gender" name="gender" value="male">
                 <label for="male-gender">Male</label><br>
             </div>
-            <div class="col">
-                <input class="form-control" type="radio" id="female-gender" name="gender" value="female">
+            <div class="col-sm-6">
+                <input type="radio" id="female-gender" name="gender" value="female">
                 <label for="female-gender">Female</label><br>
             </div>
         </div>
-        <input type="submit" value="Next">
+        <input class="form-control" type="submit" value="Next">
     </form>
 </div>
 {%endblock%}
