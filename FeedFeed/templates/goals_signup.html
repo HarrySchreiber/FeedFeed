@@ -29,7 +29,7 @@ About You
 
 {%block forms%}
 <div class="row">
-    <form id="goal-info-signup">
+    <form id="goal-info-signup" action="{{url_for('signup_goals_post')}}" method="POST">
         <label for="weight-goal">Weight Goal</label>
         <div class="row">
             <div class="col-sm-4">

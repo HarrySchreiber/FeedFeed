@@ -46,12 +46,12 @@ Login/Signup
     </table>
 </div>
 <div class="row">
-    <form id="login-form" style="display: block;">
+    <form id="login-form" style="display: block;" action="{{url_for('login_post')}}" method="POST">
         <input class="form-control" type="email" name="login-email" placeholder="Email" required>
         <input class="form-control" type="password" name="login-password" placeholder="Password" required>
         <input class="form-control" type="submit" name="login-button" value="Log In">
     </form>
-    <form id="signup-form" style="display: none;">
+    <form id="signup-form" style="display: none;" action="{{url_for('signup_post')}}" method="POST">
         <input class="form-control" type="email" name="signup-email" placeholder="Email" required>
         <input class="form-control" type="password" name="signup-password" placeholder="Password" required>
         <input class="form-control" type="password" name="signup-confirm-password" placeholder="Re-Enter Password" required>
