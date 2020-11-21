@@ -1,12 +1,24 @@
 {% extends "user_base.html" %}
 {% block title %}
-<title> Daily Plan </title>
+<title> Pantry </title>
+{% endblock %}
+
+{% block resources %}
+<link rel="stylesheet" type="text/css" href="/static/styles/daily_plan_style.css">
 {% endblock %}
 
 {% block main %}
-<h1> This is the main content for the user daily plan page </h1>
-{% for img in image %}
-<img src={{img}}>
-<h1> {{img}} </h1>
-{% endfor %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg" id="search">
+              <h2> Favorite Meals </h2>
+        </div>
+        <div class="col-lg" id="search">
+            <h2> My Plan </h2>
+            <div class="generate">
+                <button type="button" class="btn btn-primary btn-lg">Generate Daily Plan</button>
+            </div>
+      </div>
+    </div>
+</div>
 {% endblock %}
