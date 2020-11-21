@@ -1,0 +1,21 @@
+body {
+    background-color: lightgray;
+}
+
+h2 {
+    text-align: center;
+    text-decoration: underline;
+    margin-bottom: 2%;
+}
+
+.col-lg {
+    background-color: lightblue;
+    margin: 1% 1.5% 1% 1.5%;
+    padding: 3%;
+    outline-style: solid;
+    outline-color: gray;
+}
+
+.generate {
+    text-align: center;
+}
