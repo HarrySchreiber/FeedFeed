@@ -12,12 +12,13 @@
     <div class="row">
       <div class="col-lg">
         <h2> Personal Information </h2>
-        <h4> Name: </h4>
+        <h4> Name: {{name}} </h4>
         <h4> Age: </h4>
-        <h4> Height: </h4>
-        <input type="text" id="height" name="height">
+        <h4> Height: {{heightFeet}}'{{heightInches}}" </h4>
+        <input type="text" id="heightFeet" name="heightGeet" placeholder={{heightFeet}}>
+        <input type="text" id="heightInches" name="heightInches" placeholder={{heightInches}}>
         <h4> Current Weight: </h4>
-        <input type="text" id="weight" name="weight">
+        <input type="text" id="weight" name="weight" placeholder={{weight}}>
       </div>
       <div class="col-lg">
         <h2> Fitness Goals </h2>

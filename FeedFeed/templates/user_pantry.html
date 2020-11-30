@@ -5,6 +5,7 @@
 
 {% block resources %}
 <link rel="stylesheet" type="text/css" href="/static/styles/pantry_style.css">
+<script src="/static/scripts/my_pantry.js"></script>
 {% endblock %}
 
 {% block main %}
@@ -13,34 +14,25 @@
         <div class="col-lg" id="search">
             <h2> Search Ingredients </h2>
             <div class="search-bar">
-                <input type="text" placeholder="Search Ingredients">
-                <button type="submit">Submit</button>
+                <input type="text" id="search_text" placeholder="Search Ingredients">
+                <button type="submit" id="search">Submit</button>
             </div>
-            <table>
-                <tr>
-                    <td> <input type="checkbox" name="cut" id="f-add-ingredient" /> </td>
-                    <td> <h3> Ingredient 1 </h3> </td>
+            <table id="table">
+                {%for entry in rows%}
+                <tr value="{{entry[6]}}">
+                    <td> <input class="check" type="checkbox" name="ing" id="f-add-ingredient" value="{{entry[6]}}" /> </td>
+                    <td class="ingName"> <h3> {{entry[6]}} </h3> </td>
                 </tr>
-                <tr>
-                    <td> <input type="checkbox" name="cut" id="f-add-ingredient" /> </td>
-                    <td> <h3> Ingredient 2 </h3> </td>
-                </tr>
-                <tr>
-                    <td> <input type="checkbox" name="cut" id="f-add-ingredient" /> </td>
-                    <td> <h3> Ingredient 3 </h3> </td>
-                </tr>
-                <tr>
-                    <td> <input type="checkbox" name="cut" id="f-add-ingredient" /> </td>
-                    <td> <h3> Ingredient 4 </h3> </td>
-                </tr>
+                {%endfor%}
             </table>
             <div class="buttons">
-                <button type="button" class="btn btn-primary btn-lg">Add Selected Ingredients</button>
+                <button type="button" id="addSelected" class="btn btn-primary btn-lg">Add Selected Ingredients</button>
             </div>
         </div>
         <div class="col-lg" id="my_ingredients">
             <h2> My Ingredients </h2>
-            <p> This is where the user's ingredients will show up when the add them </p>
+            <ul id="ingList">
+            </ul>
         </div>
     </div>
 </div>

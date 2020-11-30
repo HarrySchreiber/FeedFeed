@@ -326,11 +326,25 @@ def get_user_home():
 
 @app.route("/mygoals/")
 def get_user_goals():
-    return render_template("user_goals.html")
+    #The below code only works when a user has just created an account and uses session variables
+    '''
+    name = session["name"]
+    heightFeet = session["height-feet"]
+    heightInches = session["height-inches"]
+    weight = session["weight"]
+    '''
+    name = "Jacob Dybas"
+    heightFeet = 6
+    heightInches = 1
+    weight = 200
+    return render_template("user_goals.html", name=name, heightFeet=heightFeet, heightInches=heightInches, weight=weight)
 
 @app.route("/mypantry/")
 def get_user_pantry():
-    return render_template("user_pantry.html")
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+    rows = c.execute(''' SELECT * FROM Ingredient ''')
+    return render_template("user_pantry.html", rows=rows)
 
 @app.route("/dailyplan/")
 def get_daily_plan():
