@@ -2,6 +2,18 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort #TODO: Not sure all of these are nesessary yet, but well find out
 import sqlite3
+import base64
+from cryptography.fernet import Fernet
+from passlib.hash import argon2
+
+serverdir = os.path.dirname(__file__)
+pepfile = os.path.join(serverdir,"pepper.bin")
+with open(pepfile, 'rb') as fin:
+    key = fin.read()
+    pep = Fernet(key)
+
+
+from passlib.hash import bcrypt_sha256
 
 from feedFeedData import Ingredient, Meal, unitOpts
 
@@ -21,6 +33,17 @@ def get_db():
         db = g._database = sqlite3.connect(DATABASE)
     return db
 
+def hash_password(pwd,pep):
+    h = argon2.using(rounds=10).hash(pwd)
+    ph = pep.encrypt(h.encode('utf-8'))
+    b64ph = base64.b64encode(ph)
+    return b64ph
+
+def check_password(pwd, b64ph, pep):
+    ph = base64.b64decode(b64ph)
+    h = pep.decrypt(ph)
+    return argon2.verify(pwd,h)
+
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, "_database", None)
@@ -28,8 +51,6 @@ def close_connection(exception):
         db.close()
 
 #Routes
-
-#TODO: Populate this with Logic to route to Login Screen or Home Screen depending on if the user is logged into an account
 @app.route("/",methods=["GET"])
 def root():
     return redirect(url_for("login_get"))
@@ -45,8 +66,32 @@ def login_post():
 
 @app.route("/signup/",methods=["POST"])
 def signup_post():
+    if request.form.get("signup-email") is None or request.form.get("signup-email")=="":
+        flash("Must have an Email")
+        return redirect(url_for("signup_get"))
+    if request.form.get("signup-password") is None or request.form.get("signup-password")=="":
+        flash("Must have a Password")
+        return redirect(url_for("signup_get"))
+    if request.form.get("signup-confirm-password") is None or request.form.get("signup-confirm-password")=="":
+        flash("Must confirm your password")
+        return redirect(url_for("signup_get"))
+
+    c = get_db().cursor()
+    uid = c.execute("""
+        SELECT id FROM User WHERE email=?;
+    """,(request.form.get("signup-email"),)).fetchone()
+    if uid is not None:
+        flash("An account with this email address already exists")
+        return redirect(url_for("signup_get"))
+
+    h = hash_password(request.form.get("signup-password"),pep)
+
+    if(not check_password(request.form.get("signup-confirm-password"),h,pep)):
+        flash("Passwords must match")
+        return redirect(url_for("signup_get"))
+
     session["email"] = request.form.get("signup-email")
-    session["password"] = "tempPassword" #TODO: Remove temp password
+    session["password"] = h
     return redirect(url_for("signup_info_get"))
 
 @app.route("/signup/",methods=["GET"])
@@ -59,6 +104,8 @@ def signup_info_get():
 
 @app.route("/signup/info/",methods=["POST"])
 def signup_info_post():
+    print(request.form.get("name"))
+    print(request.form.get("date-of-birth"))
     session["name"] = request.form.get("name")
     session["date-of-birth"] = request.form.get("date-of-birth")
     session["height-feet"] = request.form.get("height-feet")
