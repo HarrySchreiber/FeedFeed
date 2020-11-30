@@ -104,8 +104,6 @@ def signup_info_get():
 
 @app.route("/signup/info/",methods=["POST"])
 def signup_info_post():
-    print(request.form.get("name"))
-    print(request.form.get("date-of-birth"))
     session["name"] = request.form.get("name")
     session["date-of-birth"] = request.form.get("date-of-birth")
     session["height-feet"] = request.form.get("height-feet")
@@ -121,9 +119,15 @@ def signup_goals_get():
 @app.route("/signup/goals/",methods=["POST"])
 def signup_goals_post():
     session["weight-goal"] = request.form.get("weight-goal")
-    session["excercise-goal"] = request.form.get("excercise-goal")
+    session["exercise-goal"] = request.form.get("exercise-goal")
+
+    c = get_db().cursor()
+    c.execute("""
+        INSERT INTO User (email,password,name,dob,height_feet,height_inches,weight,gender,weight_goal,exercise_goal)
+        VALUES (?,?,?,?,?,?,?,?,?,?);
+    """,(session.get("email"),session.get("password"),session.get("name"),session.get("date-of-birth"),session.get("height-feet"),session.get("height-inches"),session.get("weight"),session.get("gender"),session.get("weight-goal"),session.get("exercise-goal")))
+    get_db().commit()
     return redirect(url_for("get_user_home"))
-    return ""
 
 @app.route("/dash/")
 def adminHome():
