@@ -41,6 +41,12 @@ def login_get():
 
 @app.route("/login/",methods=["POST"])
 def login_post():
+    session["name"] = "Jacob Dybas"
+    session["height-feet"] = 6
+    session["height-inches"]  = 0
+    session["weight"] = 200
+    session["weight-goal"] = "cut"
+    session["exercise-goal"] = "Sedentary"
     return redirect(url_for("get_user_home"))
 
 @app.route("/signup/",methods=["POST"])
@@ -327,17 +333,27 @@ def get_user_home():
 @app.route("/mygoals/")
 def get_user_goals():
     #The below code only works when a user has just created an account and uses session variables
-    '''
     name = session["name"]
     heightFeet = session["height-feet"]
     heightInches = session["height-inches"]
     weight = session["weight"]
+    weightGoal = session["weight-goal"]
+    exerciseGoal = session["excercise-goal"]
     '''
     name = "Jacob Dybas"
     heightFeet = 6
     heightInches = 1
     weight = 200
-    return render_template("user_goals.html", name=name, heightFeet=heightFeet, heightInches=heightInches, weight=weight)
+    '''
+    return render_template(
+        "user_goals.html", 
+        name=name, 
+        heightFeet=heightFeet, 
+        heightInches=heightInches, 
+        weight=weight, 
+        weightGoal=weightGoal, 
+        exerciseGoal=exerciseGoal
+    )
 
 @app.route("/mypantry/")
 def get_user_pantry():

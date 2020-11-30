@@ -1,18 +1,38 @@
+#buttons {
+    text-align: center;
+}
+
+#buttons button {
+   margin: 2%;
+}
+
+body {
+    background-color: lightgray;
+}
+
 h2 {
     text-align: center;
     text-decoration: underline;
+    margin-bottom: 2%;
 }
 
 .col-lg {
     background-color: lightblue;
     margin: 1% 1.5% 1% 1.5%;
     padding: 3%;
+    outline-style: solid;
+    outline-color: gray;
 }
 
-#buttons {
+table {
+    margin-top: 3%;
+    margin-bottom: 3%;
+}
+
+.buttons {
     text-align: center;
 }
 
-#buttons button {
-    margin: 2%;
+.search-bar {
+    text-align: center;
 }

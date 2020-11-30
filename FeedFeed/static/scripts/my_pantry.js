@@ -18,6 +18,9 @@ function addToList() {
             ingredient_list.appendChild(node);
         }
     });
+    selected.forEach(function(element) {
+        element.checked = false;
+    })
 }
 
 function search() {
