@@ -319,25 +319,10 @@ def adminEditIngredientPost():
 
 @app.route("/home/")
 def get_user_home():
-    '''
-    conn = sqlite3.connect("Meals.db")
+    conn = sqlite3.connect("Database.db")
     c = conn.cursor()
-    '''
-    #rows = c.execute(''' SELECT * FROM Meals ''')
-    '''
-    info = c.fetchall()
-    name = []
-    ingredients = []
-    image = []
-    numItems = len(info)
-    for i in range(len(info)):
-        name.append(info[i][0])
-        ingredients.append(info[i][1])
-        image.append(info[i][2])
-    return render_template("user_home.html", name=name, ingredients=ingredients, 
-                            image=image, numItems=numItems)
-    '''
-    return render_template("user_home.html")
+    rows = c.execute(''' SELECT * FROM Meal ''')
+    return render_template("user_home.html", rows=rows)
 
 @app.route("/mygoals/")
 def get_user_goals():
