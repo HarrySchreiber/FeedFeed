@@ -408,6 +408,7 @@ def get_user_goals():
         weight = entry[7]
         weightGoal = entry[9]
         exerciseGoal = entry[10]
+    print(exerciseGoal)
     return render_template(
         "user_goals.html", 
         name=name, 
@@ -418,18 +419,39 @@ def get_user_goals():
         exerciseGoal=exerciseGoal
     )
 
+@app.route("/mygoals/save/", methods=["POST"])
+def save_goals():
+    print("Got AJAX request")
+    result = request.get_json()
+    print(result)
+    for key in result:
+        print(key)
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+    if result["height_feet"] is not None or result["height_feet"] != "":
+        c.execute("UPDATE User SET height_feet = ? WHERE id = ?; ", (result["height_feet"], session['uid']))
+    if result["height_inches"] is not None or result["height_inches"] != "":
+        c.execute("UPDATE User SET height_inches = ? WHERE id = ?; ", (result["height_inches"], session['uid']))
+    if result["weight"] is not None or result["weight"] != "":
+        c.execute("UPDATE User SET weight = ? WHERE id = ?; ", (result["weight"], session['uid']))
+    if result["weight_goal"] is not None or result["weight_goal"] != "":
+        c.execute("UPDATE User SET weight_goal = ? WHERE id = ?; ", (result["weight_goal"], session['uid']))
+    if result["exercise_goal"] is not None or result["exercise_goal"] != "":
+        c.execute("UPDATE User SET exercise_goal = ? WHERE id = ?; ", (result["exercise_goal"], session['uid']))
+    conn.commit()
+    return render_template("user_goals.html")
+
 @app.route("/mypantry/")
 def get_user_pantry():
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     rows = c.execute(''' SELECT * FROM Ingredient ''')
-    #ingredients = c.execute(''' SELECT DISTINCT name FROM Ingredient JOIN UserIngredients
-    #                        ON UserIngredients.ingredient=Ingredient.id WHERE UserIngredients.user=?;''', (session['uid'],)).fetchone()
-    return render_template("user_pantry.html", rows=rows)
 
-@app.route("/dailyplan/")
-def get_daily_plan():
-    return render_template("user_daily_plan.html")
+    conn2 = sqlite3.connect("Database.db")
+    s = conn2.cursor()
+    ingredients = s.execute(''' SELECT DISTINCT name FROM Ingredient JOIN UserIngredients
+                            ON UserIngredients.ingredient=Ingredient.id WHERE UserIngredients.user=?;''', (session['uid'],)).fetchall()
+    return render_template("user_pantry.html", rows=rows, ingredients=ingredients)
 
 @app.route("/mypantry/save/", methods=["POST"])
 def save_ingredients():
@@ -445,3 +467,7 @@ def save_ingredients():
             c.execute(''' INSERT INTO UserIngredients(user, ingredient) VALUES (?, ?); ''', (session['uid'], entry))
             conn.commit()
     return redirect(url_for("get_user_pantry"))
+
+@app.route("/dailyplan/")
+def get_daily_plan():
+    return render_template("user_daily_plan.html")

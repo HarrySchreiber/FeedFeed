@@ -33,7 +33,7 @@
             <h2> My Ingredients </h2>
             <ul id="ingList">
                 {%for ingredient in ingredients%}
-                <li> {{ingredient}} </li>
+                <li> {{ingredient[0]}} </li>
                 {%endfor%}
             </ul>
         </div>
