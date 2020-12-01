@@ -182,9 +182,28 @@ def signup_goals_get():
 
 @app.route("/signup/goals/",methods=["POST"])
 def signup_goals_post():
+    
+    if request.form.get("weight-goal") is None or request.form.get("weight-goal")=="":
+        flash("Must provide a weight goal")
+        return redirect(url_for("signup_goals_get"))
+    print(request.form.get("weight-goal"))
+    if request.form.get("weight-goal") != "cut" and request.form.get("weight-goal") != "maintain" and request.form.get("weight-goal") != "bulk":
+        flash("Weight Goal must be either cut, maintain, or bulk")
+        return redirect(url_for("signup_goals_get"))
+    if request.form.get("exercise-goal") is None or request.form.get("exercise-goal")=="":
+        flash("Must provide an exercise goal")
+        return redirect(url_for("signup_goals_get"))
+    if request.form.get("exercise-goal") != "1.2" and request.form.get("exercise-goal") != "1.375" and request.form.get("exercise-goal") != "1.55" and request.form.get("exercise-goal") != "1.725" and request.form.get("exercise-goal") != "1.9":
+        flash("Exercise Goal must have a valid value")
+        return redirect(url_for("signup_goals_get"))
+
     session["weight-goal"] = request.form.get("weight-goal")
     session["exercise-goal"] = request.form.get("exercise-goal")
 
+
+    if session.get("email") is None or session.get("password") is None or session.get("name") is None or session.get("date-of-birth") is None or session.get("height-feet") is None or session.get("height-inches") is None or session.get("weight") is None or session.get("gender") is None or session.get("weight-goal") is None or session.get("exercise-goal") is None:
+        flash("Something went wrong during signup, make sure to follow through signup sequentially")
+        return redirect(url_for("signup_get"))
     c = get_db().cursor()
     c.execute("""
         INSERT INTO User (email,password,name,dob,height_feet,height_inches,weight,gender,weight_goal,exercise_goal)
