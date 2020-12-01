@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort #TODO: Not sure all of these are nesessary yet, but well find out
 import sqlite3
 import base64
+import re
 from datetime import datetime, timedelta
 from cryptography.fernet import Fernet
 from passlib.hash import argon2
@@ -70,6 +71,10 @@ def login_post():
         flash("Must have a Password")
         return redirect(url_for("login_get"))
     
+    if re.search('^[a-zA-Z0-9\.]+[\._]?[a-zA-Z0-9]+[@]\w+[.]\w{2,3}$',request.form.get("login-email")) is None:
+        flash("Malformed Email Address")
+        return redirect(url_for("login_get"))
+
     c = get_db().cursor()
     user = c.execute("""
         SELECT id, password FROM User WHERE email=?;
@@ -94,6 +99,11 @@ def signup_post():
         return redirect(url_for("signup_get"))
     if request.form.get("signup-confirm-password") is None or request.form.get("signup-confirm-password")=="":
         flash("Must confirm your password")
+        return redirect(url_for("signup_get"))
+
+    
+    if re.search('^[a-zA-Z0-9\.]+[\._]?[a-zA-Z0-9]+[@]\w+[.]\w{2,3}$',request.form.get("signup-email")) is None:
+        flash("Malformed Email Address")
         return redirect(url_for("signup_get"))
 
     c = get_db().cursor()
@@ -124,6 +134,40 @@ def signup_info_get():
 
 @app.route("/signup/info/",methods=["POST"])
 def signup_info_post():
+    if request.form.get("name") is None or request.form.get("name")=="":
+        flash("Must have a Name")
+        return redirect(url_for("signup_info_get"))
+    if request.form.get("date-of-birth") is None or request.form.get("date-of-birth")=="":
+        flash("Must have an Date of Birth")
+        return redirect(url_for("signup_info_get"))
+    if datetime.strptime(request.form.get("date-of-birth"), '%Y-%m-%d').date()>=datetime.today().date():
+        flash("Date must be before today")
+        return redirect(url_for("signup_info_get"))
+    if request.form.get("height-feet") is None or request.form.get("height-feet")=="":
+        flash("Must provide height in feet")
+        return redirect(url_for("signup_info_get"))
+    if request.form.get("height-inches") is None or request.form.get("height-inches")=="":
+        flash("Must provide height in inches")
+        return redirect(url_for("signup_info_get"))
+    if int(request.form.get("height-feet")) < 1 or int(request.form.get("height-feet")) > 10:
+        flash("Height must be between 1 and 10 feet")
+        return redirect(url_for("signup_info_get"))
+    if int(request.form.get("height-inches")) < 0 or int(request.form.get("height-inches")) > 12:
+        flash("Height in inches must be between 0 and 12 inches")
+        return redirect(url_for("signup_info_get"))
+    if request.form.get("weight") is None or request.form.get("weight")=="":
+        flash("Must provide weight in pounds")
+        return redirect(url_for("signup_info_get"))
+    if int(request.form.get("weight")) <= 0 or int(request.form.get("weight")) > 1500:
+        flash("Weight must be between 1 pound and 1500 pounds")
+        return redirect(url_for("signup_info_get"))
+    if request.form.get("gender") is None or request.form.get("gender")=="":
+        flash("Must provide a gender")
+        return redirect(url_for("signup_info_get"))
+    if request.form.get("gender") != "male" and request.form.get("gender")!="female":
+        flash("Gender must be Male or Female")
+        return redirect(url_for("signup_info_get"))
+
     session["name"] = request.form.get("name")
     session["date-of-birth"] = request.form.get("date-of-birth")
     session["height-feet"] = request.form.get("height-feet")
