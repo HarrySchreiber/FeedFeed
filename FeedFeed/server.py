@@ -397,19 +397,17 @@ def get_user_home():
 
 @app.route("/mygoals/")
 def get_user_goals():
-    #The below code only works when a user has just created an account and uses session variables
-    name = session["name"]
-    heightFeet = session["height-feet"]
-    heightInches = session["height-inches"]
-    weight = session["weight"]
-    weightGoal = session["weight-goal"]
-    exerciseGoal = session["excercise-goal"]
-    '''
-    name = "Jacob Dybas"
-    heightFeet = 6
-    heightInches = 1
-    weight = 200
-    '''
+    print(session['uid'])
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+    rows = c.execute(''' SELECT * FROM User WHERE id = ?; ''', (session['uid'],))
+    for entry in rows:
+        name = entry[3]
+        heightFeet = entry[5]
+        heightInches = entry[6]
+        weight = entry[7]
+        weightGoal = entry[9]
+        exerciseGoal = entry[10]
     return render_template(
         "user_goals.html", 
         name=name, 
