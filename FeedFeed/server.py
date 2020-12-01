@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort #TODO: Not sure all of these are nesessary yet, but well find out
 import sqlite3
 import base64
+from datetime import datetime, timedelta
 from cryptography.fernet import Fernet
 from passlib.hash import argon2
 
@@ -62,7 +63,26 @@ def login_get():
 
 @app.route("/login/",methods=["POST"])
 def login_post():
-    return redirect(url_for("get_user_home"))
+    if request.form.get("login-email") is None or request.form.get("login-email")=="":
+        flash("Must have an Email")
+        return redirect(url_for("login_get"))
+    if request.form.get("login-password") is None or request.form.get("login-password")=="":
+        flash("Must have a Password")
+        return redirect(url_for("login_get"))
+    
+    c = get_db().cursor()
+    user = c.execute("""
+        SELECT id, password FROM User WHERE email=?;
+    """,(request.form.get("login-email").lower(),)).fetchone()
+
+    if user is not None and check_password(request.form.get("login-password"),user[1],pep):
+        expires = datetime.utcnow()+timedelta(hours=24)
+        session["uid"] = user[0]
+        session["expires"] = expires.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return redirect(url_for("get_user_home"))
+    
+    flash("Username or Password does not match")
+    return redirect(url_for("login_get"))
 
 @app.route("/signup/",methods=["POST"])
 def signup_post():
@@ -79,7 +99,7 @@ def signup_post():
     c = get_db().cursor()
     uid = c.execute("""
         SELECT id FROM User WHERE email=?;
-    """,(request.form.get("signup-email"),)).fetchone()
+    """,(request.form.get("signup-email").lower(),)).fetchone()
     if uid is not None:
         flash("An account with this email address already exists")
         return redirect(url_for("signup_get"))
@@ -90,7 +110,7 @@ def signup_post():
         flash("Passwords must match")
         return redirect(url_for("signup_get"))
 
-    session["email"] = request.form.get("signup-email")
+    session["email"] = request.form.get("signup-email").lower()
     session["password"] = h
     return redirect(url_for("signup_info_get"))
 
