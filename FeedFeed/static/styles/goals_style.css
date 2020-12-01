@@ -1,11 +1,3 @@
-#buttons {
-    text-align: center;
-}
-
-#buttons button {
-   margin: 2%;
-}
-
 body {
     background-color: lightgray;
 }
@@ -32,7 +24,5 @@ table {
 .buttons {
     text-align: center;
 }
-
 .search-bar {
     text-align: center;
-}

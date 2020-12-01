@@ -330,7 +330,7 @@ def get_user_home():
     rows = c.execute(''' SELECT * FROM Meal ''')
     return render_template("user_home.html", rows=rows)
 
-@app.route("/mygoals/")
+@app.route("/mygoals/", methods=["GET"])
 def get_user_goals():
     #The below code only works when a user has just created an account and uses session variables
     name = session["name"]
@@ -354,6 +354,15 @@ def get_user_goals():
         weightGoal=weightGoal, 
         exerciseGoal=exerciseGoal
     )
+
+@app.route("/mygoals/", methods=["POST"])
+def post_user_goals():
+    data = dict()
+    fields = ["height-feet", "height-inches", "weight"]
+    for field in fields:
+        data[field] = request.form.get(field)
+    #Need to write information to database
+    return render_template("user_goals.html")
 
 @app.route("/mypantry/")
 def get_user_pantry():

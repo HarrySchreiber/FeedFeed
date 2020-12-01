@@ -5,6 +5,7 @@
 
 {% block resources %}
 <link rel="stylesheet" type="text/css" href="/static/styles/goals_style.css">
+<script src="/static/scripts/goals_script.js"></script>
 {% endblock %}
 
 {% block main %}
@@ -59,8 +60,6 @@
                 <option value=1.9>Very Active (6-7 times a week) and work a physically demanding job</option>
             </select>
         </div>
-        <p> According to your height, weight, and exercise goal, your basal metabolic rate (BMR) is _____ calories per day. </p>
-        <p> In order to meet your weight goal, it is recommended you eat _____ calories per day </p>
     </div>
 </div>
 
@@ -70,6 +69,5 @@
         <button type="button" class="btn btn-primary btn-lg">Change Password</button>
         <button type="button" id="save" class="btn btn-primary btn-lg">Save Changes</button>
     </div>
-</div>
-
+</form>
 {% endblock %}
