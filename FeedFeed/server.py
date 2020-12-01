@@ -2,6 +2,19 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort #TODO: Not sure all of these are nesessary yet, but well find out
 import sqlite3
+import base64
+from datetime import datetime, timedelta
+from cryptography.fernet import Fernet
+from passlib.hash import argon2
+
+serverdir = os.path.dirname(__file__)
+pepfile = os.path.join(serverdir,"pepper.bin")
+with open(pepfile, 'rb') as fin:
+    key = fin.read()
+    pep = Fernet(key)
+
+
+from passlib.hash import bcrypt_sha256
 
 from feedFeedData import Ingredient, Meal, unitOpts
 
@@ -21,6 +34,17 @@ def get_db():
         db = g._database = sqlite3.connect(DATABASE)
     return db
 
+def hash_password(pwd,pep):
+    h = argon2.using(rounds=10).hash(pwd)
+    ph = pep.encrypt(h.encode('utf-8'))
+    b64ph = base64.b64encode(ph)
+    return b64ph
+
+def check_password(pwd, b64ph, pep):
+    ph = base64.b64decode(b64ph)
+    h = pep.decrypt(ph)
+    return argon2.verify(pwd,h)
+
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, "_database", None)
@@ -28,8 +52,6 @@ def close_connection(exception):
         db.close()
 
 #Routes
-
-#TODO: Populate this with Logic to route to Login Screen or Home Screen depending on if the user is logged into an account
 @app.route("/",methods=["GET"])
 def root():
     return redirect(url_for("login_get"))
@@ -41,18 +63,55 @@ def login_get():
 
 @app.route("/login/",methods=["POST"])
 def login_post():
-    session["name"] = "Jacob Dybas"
-    session["height-feet"] = 6
-    session["height-inches"]  = 0
-    session["weight"] = 200
-    session["weight-goal"] = "cut"
-    session["exercise-goal"] = "Sedentary"
-    return redirect(url_for("get_user_home"))
+    if request.form.get("login-email") is None or request.form.get("login-email")=="":
+        flash("Must have an Email")
+        return redirect(url_for("login_get"))
+    if request.form.get("login-password") is None or request.form.get("login-password")=="":
+        flash("Must have a Password")
+        return redirect(url_for("login_get"))
+    
+    c = get_db().cursor()
+    user = c.execute("""
+        SELECT id, password FROM User WHERE email=?;
+    """,(request.form.get("login-email").lower(),)).fetchone()
+
+    if user is not None and check_password(request.form.get("login-password"),user[1],pep):
+        expires = datetime.utcnow()+timedelta(hours=24)
+        session["uid"] = user[0]
+        session["expires"] = expires.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return redirect(url_for("get_user_home"))
+    
+    flash("Username or Password does not match")
+    return redirect(url_for("login_get"))
 
 @app.route("/signup/",methods=["POST"])
 def signup_post():
-    session["email"] = request.form.get("signup-email")
-    session["password"] = "tempPassword" #TODO: Remove temp password
+    if request.form.get("signup-email") is None or request.form.get("signup-email")=="":
+        flash("Must have an Email")
+        return redirect(url_for("signup_get"))
+    if request.form.get("signup-password") is None or request.form.get("signup-password")=="":
+        flash("Must have a Password")
+        return redirect(url_for("signup_get"))
+    if request.form.get("signup-confirm-password") is None or request.form.get("signup-confirm-password")=="":
+        flash("Must confirm your password")
+        return redirect(url_for("signup_get"))
+
+    c = get_db().cursor()
+    uid = c.execute("""
+        SELECT id FROM User WHERE email=?;
+    """,(request.form.get("signup-email").lower(),)).fetchone()
+    if uid is not None:
+        flash("An account with this email address already exists")
+        return redirect(url_for("signup_get"))
+
+    h = hash_password(request.form.get("signup-password"),pep)
+
+    if(not check_password(request.form.get("signup-confirm-password"),h,pep)):
+        flash("Passwords must match")
+        return redirect(url_for("signup_get"))
+
+    session["email"] = request.form.get("signup-email").lower()
+    session["password"] = h
     return redirect(url_for("signup_info_get"))
 
 @app.route("/signup/",methods=["GET"])
@@ -80,9 +139,15 @@ def signup_goals_get():
 @app.route("/signup/goals/",methods=["POST"])
 def signup_goals_post():
     session["weight-goal"] = request.form.get("weight-goal")
-    session["excercise-goal"] = request.form.get("excercise-goal")
+    session["exercise-goal"] = request.form.get("exercise-goal")
+
+    c = get_db().cursor()
+    c.execute("""
+        INSERT INTO User (email,password,name,dob,height_feet,height_inches,weight,gender,weight_goal,exercise_goal)
+        VALUES (?,?,?,?,?,?,?,?,?,?);
+    """,(session.get("email"),session.get("password"),session.get("name"),session.get("date-of-birth"),session.get("height-feet"),session.get("height-inches"),session.get("weight"),session.get("gender"),session.get("weight-goal"),session.get("exercise-goal")))
+    get_db().commit()
     return redirect(url_for("get_user_home"))
-    return ""
 
 @app.route("/dash/")
 def adminHome():

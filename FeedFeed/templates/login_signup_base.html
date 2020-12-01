@@ -16,6 +16,12 @@
     <title>{%block title%}FeedFeed{%endblock%}</title>
 </head>
 <body>
+    {% for message in get_flashed_messages() %}
+	<div class="alert alert-warning">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>
+		{{ message }}
+	</div>
+	{% endfor %}
     <div class="container center">
         {%block forms%}
         {%endblock%}
