@@ -423,8 +423,25 @@ def get_user_pantry():
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     rows = c.execute(''' SELECT * FROM Ingredient ''')
+    #ingredients = c.execute(''' SELECT DISTINCT name FROM Ingredient JOIN UserIngredients
+    #                        ON UserIngredients.ingredient=Ingredient.id WHERE UserIngredients.user=?;''', (session['uid'],)).fetchone()
     return render_template("user_pantry.html", rows=rows)
 
 @app.route("/dailyplan/")
 def get_daily_plan():
     return render_template("user_daily_plan.html")
+
+@app.route("/mypantry/save/", methods=["POST"])
+def save_ingredients():
+    print("Got the request from AJAX")
+    result = request.get_json()
+    print(result['values'])
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+    for value in result['values']:
+        row = c.execute(''' SELECT id FROM Ingredient WHERE name LIKE ?; ''', (value,)).fetchone()
+        for entry in row: 
+            print(entry)
+            c.execute(''' INSERT INTO UserIngredients(user, ingredient) VALUES (?, ?); ''', (session['uid'], entry))
+            conn.commit()
+    return redirect(url_for("get_user_pantry"))

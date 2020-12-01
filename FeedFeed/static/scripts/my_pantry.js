@@ -1,9 +1,15 @@
+
+var myArray = [];
+
 window.addEventListener("DOMContentLoaded", function() {
     let add_selected_button = document.getElementById("addSelected");
     add_selected_button.addEventListener("click", addToList)
 
     let submit_button = document.getElementById("search");
     submit_button.addEventListener("click", search);
+
+    let save = document.getElementById("submit-button");
+    save.addEventListener("click", generateRequest);
 });
 
 function addToList() {
@@ -16,6 +22,7 @@ function addToList() {
             var textNode = document.createTextNode(element.value);
             node.appendChild(textNode)
             ingredient_list.appendChild(node);
+            myArray.push(element.value);
         }
     });
     selected.forEach(function(element) {
@@ -36,4 +43,20 @@ function search() {
             ingredients[i].style.display = "block";
         }
     }
+}
+
+function generateRequest() {
+    console.log(myArray);
+    const comment = {
+        "values": myArray
+    };
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "http://127.0.0.1:5000/mypantry/save/");
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.addEventListener("load", function() {
+        if(this.status < 400) {
+            console.log("Successfully posted!");
+        }
+    });
+    xhr.send(JSON.stringify(comment));
 }

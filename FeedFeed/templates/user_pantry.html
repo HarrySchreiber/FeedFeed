@@ -32,8 +32,12 @@
         <div class="col-lg" id="my_ingredients">
             <h2> My Ingredients </h2>
             <ul id="ingList">
+                {%for ingredient in ingredients%}
+                <li> {{ingredient}} </li>
+                {%endfor%}
             </ul>
         </div>
     </div>
+    <button type="button" id="submit-button" class="btn btn-primary btn-large"> Save My Ingredients </button>
 </div>
 {% endblock %}
