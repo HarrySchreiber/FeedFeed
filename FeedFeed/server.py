@@ -160,6 +160,12 @@ def signup_info_post():
     if request.form.get("height-inches") is None or request.form.get("height-inches")=="":
         flash("Must provide height in inches")
         return redirect(url_for("signup_info_get"))
+    if not request.form.get("height-feet").isnumeric():
+        flash("Height in feet must be a number")
+        return redirect(url_for("signup_info_get"))
+    if not request.form.get("height-inches").isnumeric():
+        flash("Height in inches must be a number")
+        return redirect(url_for("signup_info_get"))
     if int(request.form.get("height-feet")) < 1 or int(request.form.get("height-feet")) > 10:
         flash("Height must be between 1 and 10 feet")
         return redirect(url_for("signup_info_get"))
