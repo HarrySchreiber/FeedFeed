@@ -527,6 +527,57 @@ def adminEditIngredientPost():
 
     return redirect(url_for("adminIngredientManager"))
 
+@app.route("/dash/ingredients/remove/", methods=["POST"])
+def adminRemoveIngredientPost():
+    c = get_db().cursor()
+
+    ingId = request.get_json()["itemId"]
+
+    mealIds = c.execute("""
+        SELECT meal_id FROM MealIngredients WHERE ingredient_id == ?
+    """, (ingId,)).fetchall()
+
+    for mealId in mealIds:
+        c.execute("""
+        DELETE FROM MealIngredients WHERE meal_id == ?
+        """, (mealId[0],))
+
+        get_db().commit()
+
+        c.execute("""
+            DELETE FROM Meal WHERE id == ?
+        """, (mealId[0],))
+
+        get_db().commit()
+
+    c.execute("""
+        DELETE FROM Ingredient WHERE id == ?
+    """, (ingId,))
+
+    get_db().commit()
+
+    return "Ingredient removed"
+
+@app.route("/dash/meals/remove/", methods=["POST"])
+def adminRemoveMealPost():
+    c = get_db().cursor()
+
+    mealId = request.get_json()["itemId"]
+
+    c.execute("""
+        DELETE FROM MealIngredients WHERE meal_id == ?
+    """, (mealId,))
+
+    get_db().commit()
+
+    c.execute("""
+        DELETE FROM Meal WHERE id == ?
+    """, (mealId,))
+
+    get_db().commit()
+
+    return "Meal romoved"
+
 @app.route("/home/")
 def get_user_home():
     '''
