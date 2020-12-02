@@ -74,6 +74,10 @@ def login_post():
     if re.search('^[a-zA-Z0-9\.]+[\._]?[a-zA-Z0-9]+[@]\w+[.]\w{2,3}$',request.form.get("login-email")) is None:
         flash("Malformed Email Address")
         return redirect(url_for("login_get"))
+    
+    if len(request.form.get("login-password")) < 8:
+        flash("Password must be at least 8 characters")
+        return redirect(url_for("login_get"))
 
     c = get_db().cursor()
     user = c.execute("""
@@ -104,6 +108,13 @@ def signup_post():
     
     if re.search('^[a-zA-Z0-9\.]+[\._]?[a-zA-Z0-9]+[@]\w+[.]\w{2,3}$',request.form.get("signup-email")) is None:
         flash("Malformed Email Address")
+        return redirect(url_for("signup_get"))
+
+    if len(request.form.get("signup-password")) < 8:
+        flash("Password must be at least 8 characters")
+        return redirect(url_for("signup_get"))
+    if len(request.form.get("signup-confirm-password")) < 8:
+        flash("Password must be at least 8 characters")
         return redirect(url_for("signup_get"))
 
     c = get_db().cursor()

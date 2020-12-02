@@ -13,6 +13,11 @@ window.addEventListener("DOMContentLoaded", function() {
             alert("Missing form field");
         }
 
+        if(signup_password.length < 8 || signup_confirm_password.length<8){
+            e.preventDefault();
+            alert("Passwords Must be at least of length 8");
+        }
+
         if(signup_password != signup_confirm_password){
             e.preventDefault();
             alert("Passwords Don't Match");
@@ -22,7 +27,31 @@ window.addEventListener("DOMContentLoaded", function() {
             e.preventDefault();
             alert("Email is Malformed");
         }
+
+        
     });
+
+    let login_form = document.getElementById("login-form");
+    login_form.addEventListener("submit", (e) => {
+        let login_password = document.getElementById("login-password").value;
+        let login_email = document.getElementById("login-email").value;
+        if(login_password == "" ||  login_email == ""){
+            e.preventDefault();
+            alert("Missing form field");
+        }
+
+        if(login_password.length < 8){
+            e.preventDefault();
+            alert("Passwords Must be at least of length 8");
+        }
+
+        if(!/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(login_email)){
+            e.preventDefault();
+            alert("Email is Malformed");
+        }
+    });
+
+
 });
 
 function toggle_login(){
