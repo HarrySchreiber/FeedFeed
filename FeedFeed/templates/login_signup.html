@@ -27,6 +27,37 @@ Login/Signup
     td:hover{
         background-color: lightgray;
     }
+
+    .passwords{
+        position: relative;
+    }
+
+    .passwords::before,
+    .passwords::after{
+        --scale: 0;
+        --arrow-size: 10px;
+        position: absolute;
+        left: 100%;
+        top: -.25rem;
+        transform: translateX(var(--translate-x,0)) translateY(5%) scale(var(--scale));
+        transition: 50ms transform;
+        transform-origin: left center;
+    }
+
+    .passwords::before{
+        --translate-x: calc(5% - var(--arrow-size));
+        content: attr(data-tooltip);
+        padding: 0.5rem;
+        color:white;
+        background: #333;
+        border-radius: .3rem;
+        width: max-content;
+    }
+
+    .passwords:hover::before,
+    .passwords:hover::after{
+        --scale: 1;
+    }
 </style>
 {%endblock%}
 
@@ -48,14 +79,20 @@ Login/Signup
 <div class="row">
     <form id="login-form" style="display: block;" action="{{url_for('login_post')}}" method="POST">
         <input class="form-control" type="email" name="login-email" placeholder="Email" required>
-        <input class="form-control" type="password" name="login-password" placeholder="Password" required>
+        <div class="passwords"  data-tooltip="Passwords must be a minimum of length 8">
+            <input class="form-control" type="password" name="login-password" id="login-password" placeholder="Password" minlength="8" required>
+        </div>
         <input class="form-control" type="submit" name="login-button" value="Log In">
     </form>
     <form id="signup-form" style="display: none;" action="{{url_for('signup_post')}}" method="POST">
-        <input class="form-control" type="email" name="signup-email" placeholder="Email" required>
-        <input class="form-control" type="password" name="signup-password" placeholder="Password" required>
-        <input class="form-control" type="password" name="signup-confirm-password" placeholder="Re-Enter Password" required>
-        <input class="form-control" type="submit" name="signup-button" value="Sign Up">
+        <input class="form-control" type="email" name="signup-email" id="signup-email" placeholder="Email" required>
+        <div class="passwords"  data-tooltip="Passwords must be a minimum of length 8">
+            <input class="form-control" type="password" name="signup-password" id="signup-password" placeholder="Password" minlength="8" required>
+        </div>
+        <div class="passwords"  data-tooltip="Passwords must be a minimum of length 8">
+            <input class="form-control" type="password" name="signup-confirm-password" id="signup-confirm-password" minlength="8" placeholder="Re-Enter Password" required>
+        </div>
+        <input id="signup-submit-button" class="form-control" type="submit" name="signup-button" value="Sign Up">
     </form>
 </div>
 {%endblock%}
