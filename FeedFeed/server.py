@@ -415,6 +415,7 @@ def get_user_goals():
     rows = c.execute(''' SELECT * FROM User WHERE id = ?; ''', (session['uid'],))
     for entry in rows:
         name = entry[3]
+        dob = entry[4]
         heightFeet = entry[5]
         heightInches = entry[6]
         weight = entry[7]
@@ -424,6 +425,7 @@ def get_user_goals():
     return render_template(
         "user_goals.html", 
         name=name, 
+        dob=dob,
         heightFeet=heightFeet, 
         heightInches=heightInches, 
         weight=weight, 
