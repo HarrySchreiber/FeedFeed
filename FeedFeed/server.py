@@ -56,6 +56,12 @@ def close_connection(exception):
 def root():
     return redirect(url_for("login_get"))
 
+@app.route("/", methods=["POST"])
+def post_root():
+    session['uid'] = ""
+    session['expires'] = ""
+    return redirect(url_for("login_get"))
+
 
 @app.route("/login/",methods=["GET"])
 def login_get():
