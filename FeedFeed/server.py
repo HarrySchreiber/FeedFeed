@@ -392,12 +392,18 @@ def adminEditIngredientPost():
 def get_user_home():
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
-    rows = c.execute(''' SELECT * FROM Meal ''')
-    return render_template("user_home.html", rows=rows)
+    rows = c.execute(''' SELECT * FROM Meal; ''')
+
+    conn2 = sqlite3.connect("Database.db")
+    c2 = conn.cursor()
+    mealIngs = c2.execute(''' 
+    SELECT * FROM MealIngredients JOIN Ingredient ON MealIngredients.ingredient_id = Ingredient.id
+     JOIN Meal ON Meal.id = MealIngredients.meal_id;
+     ''').fetchall()
+    return render_template("user_home.html", rows=rows, mealIngs=mealIngs)
 
 @app.route("/mygoals/")
 def get_user_goals():
-    print(session['uid'])
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     rows = c.execute(''' SELECT * FROM User WHERE id = ?; ''', (session['uid'],))
@@ -421,22 +427,19 @@ def get_user_goals():
 
 @app.route("/mygoals/save/", methods=["POST"])
 def save_goals():
-    print("Got AJAX request")
     result = request.get_json()
-    print(result)
-    for key in result:
-        print(key)
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
-    if result["height_feet"] is not None or result["height_feet"] != "":
+
+    if 'height_feet' in result and result["height_feet"] is not None and result["height_feet"] != "":
         c.execute("UPDATE User SET height_feet = ? WHERE id = ?; ", (result["height_feet"], session['uid']))
-    if result["height_inches"] is not None or result["height_inches"] != "":
+    if 'height_inches' in result and result["height_inches"] is not None and result["height_inches"] != "":
         c.execute("UPDATE User SET height_inches = ? WHERE id = ?; ", (result["height_inches"], session['uid']))
-    if result["weight"] is not None or result["weight"] != "":
+    if 'weight' in result and result["weight"] is not None and result["weight"] != "":
         c.execute("UPDATE User SET weight = ? WHERE id = ?; ", (result["weight"], session['uid']))
-    if result["weight_goal"] is not None or result["weight_goal"] != "":
+    if 'weight_goal' in result and result["weight_goal"] is not None and result["weight_goal"] != "":
         c.execute("UPDATE User SET weight_goal = ? WHERE id = ?; ", (result["weight_goal"], session['uid']))
-    if result["exercise_goal"] is not None or result["exercise_goal"] != "":
+    if 'exercise_goal' in result and result["exercise_goal"] is not None and result["exercise_goal"] != "":
         c.execute("UPDATE User SET exercise_goal = ? WHERE id = ?; ", (result["exercise_goal"], session['uid']))
     conn.commit()
     return render_template("user_goals.html")
@@ -455,9 +458,7 @@ def get_user_pantry():
 
 @app.route("/mypantry/save/", methods=["POST"])
 def save_ingredients():
-    print("Got the request from AJAX")
     result = request.get_json()
-    print(result['values'])
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     for value in result['values']:
@@ -470,4 +471,8 @@ def save_ingredients():
 
 @app.route("/dailyplan/")
 def get_daily_plan():
+    return render_template("user_daily_plan.html")
+
+@app.route("/dailyplan/", methods=["POST"])
+def post_daily_plan():
     return render_template("user_daily_plan.html")

@@ -18,6 +18,14 @@
                 <h3> Description: </h2>
                 <p> {{entry[3]}} </p>
                 <p> This meal serves {{entry[4]}} and has {{entry[5]}} calories per serving. </p>
+                <h3> Ingredients: </h3>
+                <ul>
+                    {%for row in mealIngs%}
+                    {%if row[0] == entry[1]%}
+                    <li>{{row[9]}}</li>
+                    {%endif%}
+                    {%endfor%}                    
+                </ul>
             </td>
         </tr>
         {%endfor%}
