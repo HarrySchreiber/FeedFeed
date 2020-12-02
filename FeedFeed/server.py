@@ -471,8 +471,20 @@ def save_ingredients():
 
 @app.route("/dailyplan/")
 def get_daily_plan():
-    return render_template("user_daily_plan.html")
+    rows=[]
+    mealIngs=[]
+    return render_template("user_daily_plan.html", rows=rows, mealIngs=[])
 
 @app.route("/dailyplan/", methods=["POST"])
 def post_daily_plan():
-    return render_template("user_daily_plan.html")
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+    rows = c.execute(''' SELECT * FROM Meal; ''')
+
+    conn2 = sqlite3.connect("Database.db")
+    c2 = conn.cursor()
+    mealIngs = c2.execute(''' 
+    SELECT * FROM MealIngredients JOIN Ingredient ON MealIngredients.ingredient_id = Ingredient.id
+     JOIN Meal ON Meal.id = MealIngredients.meal_id;
+     ''').fetchall()
+    return render_template("user_daily_plan.html", rows=rows, mealIngs=mealIngs)

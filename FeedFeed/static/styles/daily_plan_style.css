@@ -19,3 +19,30 @@ h2 {
 .generate {
     text-align: center;
 }
+
+tr {
+    border-style: solid;
+    border-color: black;
+    border-width: thin;
+    background-color: lightblue;
+    margin: 1% 0% 1% 0%;
+}
+
+table {
+    width: 100%;
+}
+
+img {
+    width: 300px;
+    height: 175px;
+    padding: 1%;
+}
+
+.meal-image {
+    width: 300px;
+}
+
+td h2 {
+    text-align: center;
+    text-decoration: underline;
+}
