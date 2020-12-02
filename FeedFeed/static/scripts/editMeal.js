@@ -19,6 +19,10 @@ window.addEventListener("DOMContentLoaded", function() {
         elt.addEventListener("keyup", updateCals)
     }
 
+    for (btn of document.querySelectorAll(".removeIng")) {
+        btn.addEventListener("click", removeIng)
+    }
+
 });
 
 function cloneRow() {

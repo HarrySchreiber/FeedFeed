@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort #TODO: Not sure all of these are nesessary yet, but well find out
 import sqlite3
 
-from feedFeedData import Ingredient, Meal, unitOpts
+from feedFeedData import Ingredient, Meal, unitOpts, MealIng
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.urandom(32)
@@ -97,7 +97,7 @@ def adminMealManager():
     """).fetchall()
 
     for record in t:
-        mealData[record[0]] = Meal(record[0], record[1], record[2], record[3], record[4], record[5])
+        mealData[record[0]] = Meal(record[0], record[1], record[2], record[3], record[4], record[5], None)
 
     return render_template("admin_meals.html",
                             username="Administrator",
@@ -138,13 +138,201 @@ def adminEditMeal():
                                 unitOpts = unitOpts,
                                 ingredientOpts=ingData)
     elif action == "Edit":
-        flash("Action not implemented yet")
-        return redirect(url_for("adminMealManager"))
+        if "id" in args:
+            try:
+                mealId = int(args["id"])
+            except:
+                abort(404)
+
+            #Check id exists
+            idCnt = c.execute("""
+                SELECT COUNT(*) FROM Meal WHERE id == ?
+            """, (mealId,)).fetchone()
+
+            if(idCnt[0] == 0):
+                abort(404)
+
+            mealIngs = list()
+            #Fetch ingredient information
+            c = get_db().cursor()
+
+            ingInfo = c.execute("""
+                SELECT ingredient_id, name, quantity, unit FROM Ingredient
+                JOIN
+                (SELECT ingredient_id, quantity, unit FROM MealIngredients WHERE meal_id == ?) AS MealRel
+                ON
+                Ingredient.id == MealRel.ingredient_id;
+            """, (mealId,)).fetchall()
+
+            for ing in ingInfo:
+                mealIngs.append(MealIng(ing[0], ing[1], ing[2], ing[3]))
+
+            mealInfo = c.execute("""
+                SELECT id, name, description, image, serves, calories_per_serving FROM Meal WHERE id == ?
+            """, (mealId,)).fetchone()
+
+            currentMeal = Meal(mealInfo[0], mealInfo[1], mealInfo[2], mealInfo[3], mealInfo[4], mealInfo[5], mealIngs)
+
+            print(currentMeal.ingredients)
+
+            return render_template("admin_edit_meal.html",
+                                    username="Administrator",
+                                    uiSectionName=f"{action} Ingredient",
+                                    meal=currentMeal,
+                                    showBackButton=True,
+                                    backLink=url_for("adminMealManager"),
+                                    action=action,
+                                    unitOpts = unitOpts,
+                                    ingredientOpts=ingData)
     
     abort(404)
 
 @app.route("/dash/meals/edit/", methods=["POST"])
 def adminEditMealPost():
+    #Get db cursor
+    c = get_db().cursor()
+
+    mealData = dict()
+    ingData = dict()
+    mealId = 0 #Init to bogus value
+
+    #Validation
+    fields = ["id", "mealName", "description", "mealServes", "caloriesPer", "imageUrl"]
+    lists = ["quantity", "units", "ingredients"]
+    requiredFields = ["id", "mealName", "mealServes", "caloriesPer", "imageUrl"]
+
+    for field in fields:
+        mealData[field] = request.form.get(field)
+
+    for l in lists:
+        ingData[l] = request.form.getlist(l)
+    
+    #Server side validation
+    valid = True
+
+    #Check required fields
+    for field in requiredFields:
+        if mealData[field] is None or mealData[field] == "":
+            flash(f"{field} is required")
+            valid = False
+
+    if valid and len(ingData["ingredients"]) == 0:
+        flash("At least one ingredient is required")
+        valid = False
+
+    #Check that meal id is an int
+    if valid:
+        try:
+            mealId = int(mealData["id"])
+        except:
+            flash("Invalid meal id provided")
+            valid = False
+
+    #Check that meal id (for edit) exists
+    if valid and mealId != -1:
+        idCnt = c.execute("""
+            SELECT COUNT(*) FROM Meal WHERE id == ?
+        """, (mealId,)).fetchone()
+        if idCnt[0] != 1:
+            flash("Invalid meal id provided")
+            valid = False
+
+    #Check numbers
+    if valid:
+        try:
+            int(mealData["mealServes"])
+        except:
+            flash("Number serves must be an integer")
+            valid = False
+
+    if valid:
+        try:
+            float(mealData["caloriesPer"])
+        except:
+            flash("Calories per serving must be a float")
+            valid = False
+
+    if valid:
+        valIng = list()
+        #Check for duplicate ingredients
+        for ingredient in ingData["ingredients"]:
+            if ingredient in valIng:
+                flash("Two of the same ingredient submitted")
+                valid = False
+            else:
+                valIng.append(ingredient)
+
+    if valid:
+        #Check quantity numbers
+        for quantity in ingData["quantity"]:
+            try:
+                qnt = float(quantity)
+                if qnt <= 0:
+                    flash("All quantities must be greater than zero")
+                    valid = False
+            except:
+                flash("All quantities must be floating point numbers")
+                valid = False
+    if valid:
+        #Check units
+        for unit in ingData["units"]:
+            if unit not in unitOpts:
+                flash(f"{unit} is not a valid unit")
+                valid = False
+
+
+    if not valid:
+        return redirect(url_for("adminEditMeal"))
+
+    #Add the meal data to database
+    if mealId == -1:
+        #get max id
+        maxId = c.execute("""
+            SELECT MAX(id) FROM Meal
+        """).fetchone()
+
+        try:
+            newId = int(maxId[0]) + 1
+        except:
+            newId = 0
+
+        mealId = newId
+
+        if mealData["description"] is not None and mealData["description"] != "":
+            c.execute("""
+                INSERT INTO Meal (id, name, image, description, serves, calories_per_serving)
+                VALUES (?, ?, ?, ?, ?, ?);
+            """, (newId, mealData["mealName"], mealData["imageUrl"], mealData["description"], mealData["mealServes"], mealData["caloriesPer"]))
+        else:
+            c.execute("""
+                INSERT INTO Meal (id, name, image, serves, calories_per_serving)
+                VALUES (?, ?, ?, ?, ?, ?);
+            """, (newId, mealData["mealName"], mealData["imageUrl"], mealData["mealServes"], mealData["caloriesPer"]))
+
+        get_db().commit()
+    
+    else:
+        #Update meal data
+        c.execute("""
+            UPDATE Meal
+            SET image = ?, description = ?, serves = ?, calories_per_serving = ?
+            WHERE id == ?
+        """, (mealData["imageUrl"], mealData["description"], mealData["mealServes"], mealData["caloriesPer"], mealId))
+
+        #Remove old ingredients
+        c.execute("""
+            DELETE FROM MealIngredients WHERE meal_id == ?
+        """, (mealId,))
+
+    #Add the ingredient data to database
+    for i in range(len(ingData["ingredients"])):
+        c.execute("""
+            INSERT INTO MealIngredients (meal_id, ingredient_id, quantity, unit)
+            VALUES (?, ?, ?, ?)
+        """, (mealId, ingData["ingredients"][i], ingData["quantity"][i], ingData["units"][i]))
+    
+    get_db().commit()
+    
     return redirect(url_for("adminMealManager"))
 
 #Displays all the ingredients in the database in a readable format and provides management options
@@ -214,7 +402,6 @@ def adminEditIngredient():
 
 @app.route("/dash/ingredients/edit/", methods=["POST"])
 def adminEditIngredientPost():
-    print(f"Submitted ing with id {request.form.get('id')}, isMeal is: {request.form.get('isMeal')}")
     #Get db cursor
     c = get_db().cursor()
 
@@ -248,8 +435,6 @@ def adminEditIngredientPost():
     if valid:    
         try:
             ingId = int(data["id"])
-
-            print(f"Id: {ingId}")
 
             if ingId > 0:
                 #Check id

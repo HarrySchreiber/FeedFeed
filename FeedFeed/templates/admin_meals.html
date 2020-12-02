@@ -1,5 +1,10 @@
 {% extends "admin_base.html" %}
 
+{% block resources %}
+{{super()}}
+<script src="/static/scripts/data_explorer_script.js"></script>
+{% endblock %}
+
 {% block main %}
 <div class="container">
     {% for message in get_flashed_messages() %}
@@ -29,7 +34,7 @@
             {% for id, val in tableData.items() %}
             <tr class="tData">
                 <td><input class="dataCheck" name="{{id}}" type="checkbox"></td>
-                <td><img src="data:;base64,{{ val.image }}"></td>
+                <td><img class="mealImg" src="{{val.image}}"></td>
                 <td>{{val.name}}</td>
                 <td>{{val.description}}</td>
                 <td>{{val.caloriesPerServing}}</td>

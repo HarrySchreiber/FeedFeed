@@ -47,3 +47,8 @@
     max-height: 60vh;
     overflow-y: auto;
 }
+
+.mealImg {
+    max-width: 200px;
+    width: 35vw
+}
