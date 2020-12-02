@@ -491,12 +491,37 @@ def adminEditIngredientPost():
             VALUES (?, ?, ?, ?, ?, ?, ?);
         """, (newId, data["calories"], data["protein"], data["carbs"], data["fat"], isMealVal, data["ingName"]))
 
+        get_db().commit()
+
+        if isMealVal == 1:
+            #get max id
+            maxMealId = c.execute("""
+                SELECT MAX(id) FROM Meal
+            """).fetchone()
+
+            try:
+                mealId = int(maxMealId[0]) + 1
+            except:
+                mealId = 0
+
+            c.execute("""
+                INSERT INTO Meal (id, name, image, serves, calories_per_serving)
+                VALUES (?, ?, ?, ?, ?)
+            """, (mealId, data["ingName"], "/static/images/default_ingredient_meal.png", 1, data["calories"]))
+
+            get_db().commit()
+
+            c.execute("""
+                INSERT INTO MealIngredients (meal_id, ingredient_id, quantity, unit)
+                VALUES (?, ?, ?, ?)
+            """, (mealId, newId, 1, "oz"))
+
     elif ingId > 0:
         c.execute("""
            UPDATE Ingredient
-           SET calories = ?, protein = ?, carbs = ?, fat = ?, is_meal = ?
+           SET calories = ?, protein = ?, carbs = ?, fat = ?
            WHERE id == ?
-        """, (data["calories"], data["protein"], data["carbs"], data["fat"], isMealVal, data["id"]))
+        """, (data["calories"], data["protein"], data["carbs"], data["fat"], data["id"]))
 
     get_db().commit()
 

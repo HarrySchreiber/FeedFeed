@@ -23,6 +23,8 @@ window.addEventListener("DOMContentLoaded", function() {
         btn.addEventListener("click", removeIng)
     }
 
+    //Update drop downs once for an "edit" case
+    updateIngredientDDs()
 });
 
 function cloneRow() {
@@ -68,6 +70,9 @@ function cloneRow() {
     //Scroll the scroll area to fit
     var childCnt = table.childElementCount;
     table.parentElement.scrollTop = 50 * childCnt;
+
+    //Disable appropriate selections
+    updateIngredientDDs();
 }
 
 function removeIng() {
@@ -92,6 +97,27 @@ function calcCals() {
 
 function updateCals() {
     computeCals(document.getElementById("mealServes").value);
+
+    updateIngredientDDs()
+}
+
+function updateIngredientDDs() {
+    let selections = document.querySelectorAll("select.ingSelection")
+    let usedIngredients = []
+    for (select of selections) {
+        usedIngredients.push(select.value);
+    }
+
+    for (select of selections) {
+        for (child of select.children) {
+            if (usedIngredients.includes(child.value) && !child.selected) {
+                child.disabled = true;
+            }
+            else if (child.value != "") {
+                child.disabled = false;
+            }
+        }
+    }
 }
 
 function computeCals(serves) {

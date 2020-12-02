@@ -150,7 +150,7 @@
                             </td>
                             <td>
                                 <div class="form-group">
-                                    <select class="form-control ing" name="ingredients" required>
+                                    <select class="form-control ing ingSelection" name="ingredients" required>
                                         <option value="" disabled selected>Ingredient</option>
                                         {% for id, ing in ingredientOpts.items() %}
                                         <option class="ingOption" value="{{id}}" data-calCount="{{ing.calories}}">{{ing.name}}</option>
