@@ -6,6 +6,7 @@ About You
 
 {%block cssandjavascript%}
 <link rel="stylesheet" href="/static/styles/login_signup.css">
+<script src="/static/scripts/user_info_signup.js"></script>
 <style>
     .container{
         height: 28em;
@@ -37,14 +38,14 @@ About You
         <label for="height">Height</label>
         <div class="row">
             <div class="col">
-                <input class="form-control" type="number" id="height-feet" name="height-feet" placeholder="Feet" required>
+                <input class="form-control" type="number" id="height-feet" name="height-feet" placeholder="Feet" min="1" max="10" required>
             </div>
             <div class="col">
-                <input class="form-control" type="number" id="height-inches" name="height-inches" placeholder="Inches" required>
+                <input class="form-control" type="number" id="height-inches" name="height-inches" placeholder="Inches" min="0" max="12" required>
             </div>
         </div>
         <label for="weight">Weight</label>
-        <input class="form-control" type="number" name="weight" id="weight" placeholder="Weight (lbs)" required>
+        <input class="form-control" type="number" name="weight" id="weight" placeholder="Weight (lbs)" min="1" max="1500" required>
         <label for="gender">Gender</label>
         <div class="row">
             <div class="col-sm-6">
