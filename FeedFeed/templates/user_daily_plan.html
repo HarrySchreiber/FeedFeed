@@ -15,9 +15,34 @@
         </div>
         <div class="col-lg" id="search">
             <h2> My Plan </h2>
-            <div class="generate">
-                <button type="button" class="btn btn-primary btn-lg">Generate Daily Plan</button>
-            </div>
+            <table class="table">
+                <tbody>
+                    {%for entry in rows%}
+                    <tr>
+                        <td class="meal-image"> <img src={{entry[2]}}> </td>
+                        <td>
+                            <h2> {{entry[0]}} </h2>
+                            <h3> Description: </h2>
+                            <p> {{entry[3]}} </p>
+                            <p> This meal serves {{entry[4]}} and has {{entry[5]}} calories per serving. </p>
+                            <h3> Ingredients: </h3>
+                            <ul>
+                                {%for row in mealIngs%}
+                                {%if row[0] == entry[1]%}
+                                <li>{{row[9]}}</li>
+                                {%endif%}
+                                {%endfor%}                    
+                            </ul>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+            <form method="post" action="/dailyplan/">
+                <div class="generate">
+                    <input class="btn btn-primary btn-large" type="submit" value="Generate Daily Plan">
+                </div>
+            </form>
       </div>
     </div>
 </div>

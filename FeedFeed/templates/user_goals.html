@@ -5,6 +5,7 @@
 
 {% block resources %}
 <link rel="stylesheet" type="text/css" href="/static/styles/goals_style.css">
+<script src="/static/scripts/my_goals.js"></script>
 {% endblock %}
 
 {% block main %}
@@ -12,34 +13,72 @@
     <div class="row">
       <div class="col-lg">
         <h2> Personal Information </h2>
-        <h4> Name: </h4>
-        <h4> Age: </h4>
-        <h4> Height: </h4>
-        <input type="text" id="height" name="height">
+        <h4> Name: {{name}} </h4>
+        <h4> Date of Birth: {{dob}} </h4>
+        <h4> Height: {{heightFeet}}'{{heightInches}}" </h4>
+        <input type="text" id="heightFeet" name="heightGeet" placeholder={{heightFeet}}>
+        <input type="text" id="heightInches" name="heightInches" placeholder={{heightInches}}>
         <h4> Current Weight: </h4>
-        <input type="text" id="weight" name="weight">
+        <input type="text" id="weight" name="weight" placeholder={{weight}}>
       </div>
       <div class="col-lg">
         <h2> Fitness Goals </h2>
         <h4> Weight Goal: </h4>
-        <div class="form-group">
-            <input type="checkbox" name="cut" id="f-cut" />
-            <label for="f-owner-read">Cut</label>
-            <input type="checkbox" name="maintain" id="f-maintain" />
-            <label for="f-owner-write">Maintain</label>
-            <input type="checkbox" name="bulk" id="f-bulk"/>
-            <label for="f-owner-execute">Bulk</label>
+        <div class="row">
+            <div class="col-sm-4">
+                {%if weightGoal == "cut"%}
+                <input type="radio" id="cut-radio-button" name="weight-goal" value="cut" checked=true required>
+                {%else%}
+                <input type="radio" id="cut-radio-button" name="weight-goal" value="cut" required>
+                {%endif%}
+                <label for="cut-radio-button">Cut</label><br>
+            </div>
+            <div class="col-sm-5">
+                {%if weightGoal == "maintain"%}
+                <input type="radio" id="maintain-radio-button" name="weight-goal" value="maintain" checked=true required>
+                {%else%}
+                <input type="radio" id="maintain-radio-button" name="weight-goal" value="maintain" required>
+                {%endif%}    
+                <label for="maintain-radio-button">Maintain</label><br>            
+            </div>
+            <div class="col">
+                {%if weightGoal == "bulk"%}
+                <input type="radio" id="bulk-radio-button" name="weight-goal" value="bulk" checked=true required>
+                {%else%}
+                <input type="radio" id="bulk-radio-button" name="weight-goal" value="bulk" required>
+                {%endif%}
+                <label for="bulk-radio-button">Bulk</label><br>
+            </div>
         </div>
         <h4> Exercise Goal </h4>
         <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                User Exercise Goal
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="#">Sedentary</a>
-                <a class="dropdown-item" href="#">Mild Exercise</a>
-                <a class="dropdown-item" href="#">Athlete</a>
-            </div>
+            <select class="form-control" name="excercise-goal" id="excercise-goal-box">
+                {%if exerciseGoal == 1.2%}
+                <option value=1.2 selected=true>Sedentary</option>
+                {%else%}
+                <option value=1.2>Sedentary</option>
+                {%endif%}
+                {%if exerciseGoal == 1.375%}
+                <option value=1.375 selected=true>Lightly Active (1-3 times a week)</option>
+                {%else%}
+                <option value=1.375>Lightly Active (1-3 times a week)</option>
+                {%endif%}
+                {%if exerciseGoal == 1.55%}
+                <option value=1.55 selected=true>Moderatly Active (3-5 times a week)</option>
+                {%else%}
+                <option value=1.55>Moderatly Active (3-5 times a week)</option>
+                {%endif%}
+                {%if exerciseGoal == 1.725%}
+                <option value=1.725 selected=true>Very Active (6-7 times a week)</option>
+                {%else%}
+                <option value=1.725>Very Active (6-7 times a week)</option>
+                {%endif%}
+                {%if exerciseGoal == 1.9%}
+                <option value=1.9 selected=true>Very Active (6-7 times a week) and work a physically demanding job</option>
+                {%else%}
+                <option value=1.9>Very Active (6-7 times a week) and work a physically demanding job</option>
+                {%endif%}
+            </select>
         </div>
         <p> According to your height, weight, and exercise goal, your basal metabolic rate (BMR) is _____ calories per day. </p>
         <p> In order to meet your weight goal, it is recommended you eat _____ calories per day </p>
@@ -50,7 +89,7 @@
     <div class="col" id="buttons">
         <button type="button" class="btn btn-primary btn-lg">Change Username</button>
         <button type="button" class="btn btn-primary btn-lg">Change Password</button>
-        <button type="button" class="btn btn-primary btn-lg">Save Changes</button>
+        <button type="button" id="save" class="btn btn-primary btn-lg">Save Changes</button>
     </div>
 </div>
 

@@ -57,6 +57,12 @@ def close_connection(exception):
 def root():
     return redirect(url_for("login_get"))
 
+@app.route("/", methods=["POST"])
+def post_root():
+    session['uid'] = ""
+    session['expires'] = ""
+    return redirect(url_for("login_get"))
+
 
 @app.route("/login/",methods=["GET"])
 def login_get():
@@ -733,17 +739,101 @@ def adminRemoveMealPost():
 def get_user_home():
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
-    rows = c.execute(''' SELECT * FROM Meal ''')
-    return render_template("user_home.html", rows=rows)
+    rows = c.execute(''' SELECT * FROM Meal; ''')
+
+    conn2 = sqlite3.connect("Database.db")
+    c2 = conn.cursor()
+    mealIngs = c2.execute(''' 
+    SELECT * FROM MealIngredients JOIN Ingredient ON MealIngredients.ingredient_id = Ingredient.id
+     JOIN Meal ON Meal.id = MealIngredients.meal_id;
+     ''').fetchall()
+    return render_template("user_home.html", rows=rows, mealIngs=mealIngs)
 
 @app.route("/mygoals/")
 def get_user_goals():
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+    rows = c.execute(''' SELECT * FROM User WHERE id = ?; ''', (session['uid'],))
+    for entry in rows:
+        name = entry[3]
+        dob = entry[4]
+        heightFeet = entry[5]
+        heightInches = entry[6]
+        weight = entry[7]
+        weightGoal = entry[9]
+        exerciseGoal = entry[10]
+    print(exerciseGoal)
+    return render_template(
+        "user_goals.html", 
+        name=name, 
+        dob=dob,
+        heightFeet=heightFeet, 
+        heightInches=heightInches, 
+        weight=weight, 
+        weightGoal=weightGoal, 
+        exerciseGoal=exerciseGoal
+    )
+
+@app.route("/mygoals/save/", methods=["POST"])
+def save_goals():
+    result = request.get_json()
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+
+    if 'height_feet' in result and result["height_feet"] is not None and result["height_feet"] != "":
+        c.execute("UPDATE User SET height_feet = ? WHERE id = ?; ", (result["height_feet"], session['uid']))
+    if 'height_inches' in result and result["height_inches"] is not None and result["height_inches"] != "":
+        c.execute("UPDATE User SET height_inches = ? WHERE id = ?; ", (result["height_inches"], session['uid']))
+    if 'weight' in result and result["weight"] is not None and result["weight"] != "":
+        c.execute("UPDATE User SET weight = ? WHERE id = ?; ", (result["weight"], session['uid']))
+    if 'weight_goal' in result and result["weight_goal"] is not None and result["weight_goal"] != "":
+        c.execute("UPDATE User SET weight_goal = ? WHERE id = ?; ", (result["weight_goal"], session['uid']))
+    if 'exercise_goal' in result and result["exercise_goal"] is not None and result["exercise_goal"] != "":
+        c.execute("UPDATE User SET exercise_goal = ? WHERE id = ?; ", (result["exercise_goal"], session['uid']))
+    conn.commit()
     return render_template("user_goals.html")
 
 @app.route("/mypantry/")
 def get_user_pantry():
-    return render_template("user_pantry.html")
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+    rows = c.execute(''' SELECT * FROM Ingredient ''')
+
+    conn2 = sqlite3.connect("Database.db")
+    s = conn2.cursor()
+    ingredients = s.execute(''' SELECT DISTINCT name FROM Ingredient JOIN UserIngredients
+                            ON UserIngredients.ingredient=Ingredient.id WHERE UserIngredients.user=?;''', (session['uid'],)).fetchall()
+    return render_template("user_pantry.html", rows=rows, ingredients=ingredients)
+
+@app.route("/mypantry/save/", methods=["POST"])
+def save_ingredients():
+    result = request.get_json()
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+    for value in result['values']:
+        row = c.execute(''' SELECT id FROM Ingredient WHERE name LIKE ?; ''', (value,)).fetchone()
+        for entry in row: 
+            print(entry)
+            c.execute(''' INSERT INTO UserIngredients(user, ingredient) VALUES (?, ?); ''', (session['uid'], entry))
+            conn.commit()
+    return redirect(url_for("get_user_pantry"))
 
 @app.route("/dailyplan/")
 def get_daily_plan():
-    return render_template("user_daily_plan.html")
+    rows=[]
+    mealIngs=[]
+    return render_template("user_daily_plan.html", rows=rows, mealIngs=[])
+
+@app.route("/dailyplan/", methods=["POST"])
+def post_daily_plan():
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+    rows = c.execute(''' SELECT * FROM Meal; ''')
+
+    conn2 = sqlite3.connect("Database.db")
+    c2 = conn.cursor()
+    mealIngs = c2.execute(''' 
+    SELECT * FROM MealIngredients JOIN Ingredient ON MealIngredients.ingredient_id = Ingredient.id
+     JOIN Meal ON Meal.id = MealIngredients.meal_id;
+     ''').fetchall()
+    return render_template("user_daily_plan.html", rows=rows, mealIngs=mealIngs)
