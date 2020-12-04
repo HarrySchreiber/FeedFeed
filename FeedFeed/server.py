@@ -802,6 +802,9 @@ def adminRemoveMealPost():
 
 @app.route("/home/")
 def get_user_home():
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     rows = c.execute(''' SELECT * FROM Meal; ''')
@@ -816,6 +819,9 @@ def get_user_home():
 
 @app.route("/mygoals/")
 def get_user_goals():
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     rows = c.execute(''' SELECT * FROM User WHERE id = ?; ''', (session['uid'],))
@@ -860,6 +866,9 @@ def save_goals():
 
 @app.route("/mypantry/")
 def get_user_pantry():
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     rows = c.execute(''' SELECT * FROM Ingredient ''')
@@ -885,6 +894,9 @@ def save_ingredients():
 
 @app.route("/dailyplan/")
 def get_daily_plan():
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
     rows=[]
     mealIngs=[]
     return render_template("user_daily_plan.html", rows=rows, mealIngs=[])
