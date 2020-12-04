@@ -55,11 +55,17 @@ def close_connection(exception):
 #Routes
 @app.route("/",methods=["GET"])
 def root():
+    #TODO: Set this admin flag forreal
+    admin_flag = False
+    if(admin_flag):
+        return redirect(url_for("adminHome"))
+    if(session.get("uid") is not None):
+        return redirect(url_for("get_user_home"))
     return redirect(url_for("login_get"))
 
 @app.route("/", methods=["POST"])
 def post_root():
-    session['uid'] = ""
+    session['uid'] = None
     session['expires'] = ""
     return redirect(url_for("login_get"))
 
@@ -147,6 +153,9 @@ def signup_get():
 
 @app.route("/signup/info/",methods=["GET"])
 def signup_info_get():
+    if(session.get("email") is None or session.get("password") is None):
+        flash("Please follow the signup process procedurally")
+        return redirect(url_for("login_get"))
     return render_template("user_info_signup.html")
 
 @app.route("/signup/info/",methods=["POST"])
@@ -201,6 +210,9 @@ def signup_info_post():
 
 @app.route("/signup/goals/",methods=["GET"])
 def signup_goals_get():
+    if(session.get("name") is None or session.get("date-of-birth") is None or session.get("height-feet") is None or session.get("height-inches") is None or session.get("weight") is None or session.get("gender") is None):
+        flash("Please follow the signup process procedurally")
+        return redirect(url_for("login_get"))
     return render_template("goals_signup.html")
 
 @app.route("/signup/goals/",methods=["POST"])
@@ -233,10 +245,29 @@ def signup_goals_post():
         VALUES (?,?,?,?,?,?,?,?,?,?);
     """,(session.get("email"),session.get("password"),session.get("name"),session.get("date-of-birth"),session.get("height-feet"),session.get("height-inches"),session.get("weight"),session.get("gender"),session.get("weight-goal"),session.get("exercise-goal")))
     get_db().commit()
-    return redirect(url_for("get_user_home"))
+
+    user = c.execute("""
+        SELECT id FROM User WHERE email=?;
+    """,(session.get("email").lower(),)).fetchone()
+
+    if user is not None:
+        expires = datetime.utcnow()+timedelta(hours=24)
+        session["uid"] = user[0]
+        session["expires"] = expires.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return redirect(url_for("get_user_home"))
+    
+    flash("Something Went Wrong")
+    return redirect(url_for("signup_goals_get"))
+
+    
 
 @app.route("/dash/")
 def adminHome():
+    #TODO: Set this admin flag forreal
+    admin_flag = True
+    if(not admin_flag):
+        flash("Restricted Access")
+        return redirect(url_for("login_get"))
     #Until we get user logins and db implementation, placeholder data will be used for testing/viewing styling
     return render_template("admin_home.html",
                             username="Administrator",
@@ -245,6 +276,11 @@ def adminHome():
 
 @app.route("/dash/meals/")
 def adminMealManager():
+    #TODO: Set this admin flag forreal
+    admin_flag = True
+    if(not admin_flag):
+        flash("Restricted Access")
+        return redirect(url_for("login_get"))
     mealData = dict()
 
     c = get_db().cursor()
@@ -265,6 +301,11 @@ def adminMealManager():
 
 @app.route("/dash/meals/edit/", methods=["GET"])
 def adminEditMeal():
+    #TODO: Set this admin flag forreal
+    admin_flag = True
+    if(not admin_flag):
+        flash("Restricted Access")
+        return redirect(url_for("login_get"))
     ingData = dict()
 
     args = request.args
@@ -346,6 +387,11 @@ def adminEditMeal():
 
 @app.route("/dash/meals/edit/", methods=["POST"])
 def adminEditMealPost():
+    #TODO: Set this admin flag forreal
+    admin_flag = True
+    if(not admin_flag):
+        flash("Restricted Access")
+        return redirect(url_for("login_get"))
     #Get db cursor
     c = get_db().cursor()
 
@@ -495,6 +541,11 @@ def adminEditMealPost():
 #Displays all the ingredients in the database in a readable format and provides management options
 @app.route("/dash/ingredients/")
 def adminIngredientManager():
+    #TODO: Set this admin flag forreal
+    admin_flag = True
+    if(not admin_flag):
+        flash("Restricted Access")
+        return redirect(url_for("login_get"))
     ingData = dict()
 
     c = get_db().cursor()
@@ -515,6 +566,11 @@ def adminIngredientManager():
 
 @app.route("/dash/ingredients/edit/", methods=["GET"])
 def adminEditIngredient():
+    #TODO: Set this admin flag forreal
+    admin_flag = True
+    if(not admin_flag):
+        flash("Restricted Access")
+        return redirect(url_for("login_get"))
     args = request.args
 
     #If an action was specified and valid, use that. Otherwise, "New"
@@ -559,6 +615,11 @@ def adminEditIngredient():
 
 @app.route("/dash/ingredients/edit/", methods=["POST"])
 def adminEditIngredientPost():
+    #TODO: Set this admin flag forreal
+    admin_flag = True
+    if(not admin_flag):
+        flash("Restricted Access")
+        return redirect(url_for("login_get"))
     #Get db cursor
     c = get_db().cursor()
 
@@ -686,6 +747,11 @@ def adminEditIngredientPost():
 
 @app.route("/dash/ingredients/remove/", methods=["POST"])
 def adminRemoveIngredientPost():
+    #TODO: Set this admin flag forreal
+    admin_flag = True
+    if(not admin_flag):
+        flash("Restricted Access")
+        return redirect(url_for("login_get"))
     c = get_db().cursor()
 
     ingId = request.get_json()["itemId"]
@@ -717,6 +783,11 @@ def adminRemoveIngredientPost():
 
 @app.route("/dash/meals/remove/", methods=["POST"])
 def adminRemoveMealPost():
+    #TODO: Set this admin flag forreal
+    admin_flag = True
+    if(not admin_flag):
+        flash("Restricted Access")
+        return redirect(url_for("login_get"))
     c = get_db().cursor()
 
     mealId = request.get_json()["itemId"]
@@ -737,6 +808,9 @@ def adminRemoveMealPost():
 
 @app.route("/home/")
 def get_user_home():
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     rows = c.execute(''' SELECT * FROM Meal; ''')
@@ -752,6 +826,9 @@ def get_user_home():
 
 @app.route("/mygoals/")
 def get_user_goals():
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     rows = c.execute(''' SELECT * FROM User WHERE id = ?; ''', (session['uid'],))
@@ -796,6 +873,9 @@ def save_goals():
 
 @app.route("/mypantry/")
 def get_user_pantry():
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     rows = c.execute(''' SELECT * FROM Ingredient ''')
@@ -821,6 +901,9 @@ def save_ingredients():
 
 @app.route("/dailyplan/")
 def get_daily_plan():
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
     rows=[]
     mealIngs=[]
     conn = sqlite3.connect("Database.db")

@@ -60,7 +60,7 @@ function toggle_login(){
     let signup_form = document.getElementById("signup-form");
     signup_form.style.display = "none";
     let login_table_cell = document.getElementById("login-table-cell");
-    login_table_cell.style.borderBottom = "1px solid lightgray";
+    login_table_cell.style.borderBottom = "1px solid #007bff";
     let signup_table_cell = document.getElementById("signup-table-cell");
     signup_table_cell.style.borderBottom = "none";
 }
@@ -73,5 +73,5 @@ function toggle_signup(){
     let login_table_cell = document.getElementById("login-table-cell");
     login_table_cell.style.borderBottom = "none";
     let signup_table_cell = document.getElementById("signup-table-cell");
-    signup_table_cell.style.borderBottom = "1px solid lightgray";
+    signup_table_cell.style.borderBottom = "1px solid #007bff";
 }
