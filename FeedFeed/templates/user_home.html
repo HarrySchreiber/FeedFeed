@@ -26,6 +26,10 @@
                     {%endif%}
                     {%endfor%}                    
                 </ul>
+                <form id="{{entry[1]}}" action="{{url_for('add_favorite_meal')}}" method="POST">
+                    <label for="meal_to_favorite">Favorite this meal (Click below): </label><br>
+                    <input class="form-control" name="name" id="meal_to_favorite" type="submit" value="{{entry[1]}}">
+                </form>
             </td>
         </tr>
         {%endfor%}

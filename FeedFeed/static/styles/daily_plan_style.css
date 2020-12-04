@@ -46,3 +46,9 @@ td h2 {
     text-align: center;
     text-decoration: underline;
 }
+
+#search {
+    height: 500px;
+    overflow-y: scroll;
+    margin-top: 5%;
+}

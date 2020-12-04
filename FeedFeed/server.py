@@ -747,6 +747,7 @@ def get_user_home():
     SELECT * FROM MealIngredients JOIN Ingredient ON MealIngredients.ingredient_id = Ingredient.id
      JOIN Meal ON Meal.id = MealIngredients.meal_id;
      ''').fetchall()
+
     return render_template("user_home.html", rows=rows, mealIngs=mealIngs)
 
 @app.route("/mygoals/")
@@ -822,7 +823,12 @@ def save_ingredients():
 def get_daily_plan():
     rows=[]
     mealIngs=[]
-    return render_template("user_daily_plan.html", rows=rows, mealIngs=[])
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+    favMeals = c.execute('''
+    SELECT * FROM FavoriteMeals JOIN Meal on FavoriteMeals.meal_id = Meal.id and FavoriteMeals.user_id = ?;
+    ''', (session['uid'],))
+    return render_template("user_daily_plan.html", rows=rows, mealIngs=[], favMeals=favMeals)
 
 @app.route("/dailyplan/", methods=["POST"])
 def post_daily_plan():
@@ -836,4 +842,22 @@ def post_daily_plan():
     SELECT * FROM MealIngredients JOIN Ingredient ON MealIngredients.ingredient_id = Ingredient.id
      JOIN Meal ON Meal.id = MealIngredients.meal_id;
      ''').fetchall()
-    return render_template("user_daily_plan.html", rows=rows, mealIngs=mealIngs)
+
+    conn3 = sqlite3.connect("Database.db")
+    c3 = conn3.cursor()
+    favMeals = c3.execute('''
+    SELECT * FROM FavoriteMeals JOIN Meal on FavoriteMeals.meal_id = Meal.id and FavoriteMeals.user_id = ?;
+    ''', (session['uid'],))
+    return render_template("user_daily_plan.html", rows=rows, mealIngs=mealIngs, favMeals=favMeals)
+
+@app.route("/favorite/", methods=["POST"])
+def add_favorite_meal():
+    meal_id = request.form.get("name")
+    print(meal_id)
+    conn = sqlite3.connect("Database.db")
+    c = conn.cursor()
+    insert = c.execute(''' 
+    INSERT INTO FavoriteMeals (user_id, meal_id) VALUES (?, ?)
+    ''', (session['uid'], meal_id))
+    conn.commit()
+    return redirect(url_for("get_user_home"))

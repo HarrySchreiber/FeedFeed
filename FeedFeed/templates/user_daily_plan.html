@@ -11,7 +11,21 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg" id="search">
-              <h2> Favorite Meals </h2>
+            <h2> Favorite Meals </h2>
+            <table class="favorite-table">
+                <tbody>
+                    {%for value in favMeals%}
+                    <tr>
+                        <td> <img src={{value[4]}}> </td>
+                        <td>
+                            <h3>{{value[2]}}</h3>
+                            <h5>Description:</h5>
+                            <p>{{value[5]}}</p>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table> 
         </div>
         <div class="col-lg" id="search">
             <h2> My Plan </h2>
@@ -21,11 +35,11 @@
                     <tr>
                         <td class="meal-image"> <img src={{entry[2]}}> </td>
                         <td>
-                            <h2> {{entry[0]}} </h2>
-                            <h3> Description: </h2>
+                            <h3> {{entry[0]}} </h3>
+                            <h5> Description: </h5>
                             <p> {{entry[3]}} </p>
                             <p> This meal serves {{entry[4]}} and has {{entry[5]}} calories per serving. </p>
-                            <h3> Ingredients: </h3>
+                            <h5> Ingredients: </h5>
                             <ul>
                                 {%for row in mealIngs%}
                                 {%if row[0] == entry[1]%}
