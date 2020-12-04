@@ -55,11 +55,13 @@ def close_connection(exception):
 #Routes
 @app.route("/",methods=["GET"])
 def root():
+    if(session.get("uid") is not None):
+        return redirect(url_for("get_user_home"))
     return redirect(url_for("login_get"))
 
 @app.route("/", methods=["POST"])
 def post_root():
-    session['uid'] = ""
+    session['uid'] = None
     session['expires'] = ""
     return redirect(url_for("login_get"))
 
