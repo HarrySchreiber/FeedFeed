@@ -918,20 +918,78 @@ def post_daily_plan():
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     rows = c.execute(''' SELECT * FROM Meal; ''')
+    conn.commit()
 
-    conn2 = sqlite3.connect("Database.db")
-    c2 = conn.cursor()
-    mealIngs = c2.execute(''' 
+    #conn2 = sqlite3.connect("Database.db")
+    #c2 = conn2.cursor()
+    mealIngs = c.execute(''' 
     SELECT * FROM MealIngredients JOIN Ingredient ON MealIngredients.ingredient_id = Ingredient.id
      JOIN Meal ON Meal.id = MealIngredients.meal_id;
      ''').fetchall()
+    conn.commit()
 
-    conn3 = sqlite3.connect("Database.db")
-    c3 = conn3.cursor()
-    favMeals = c3.execute('''
+    #conn3 = sqlite3.connect("Database.db")
+    #c3 = conn3.cursor()
+    favMeals = c.execute('''
     SELECT * FROM FavoriteMeals JOIN Meal on FavoriteMeals.meal_id = Meal.id and FavoriteMeals.user_id = ?;
     ''', (session['uid'],))
-    return render_template("user_daily_plan.html", rows=rows, mealIngs=mealIngs, favMeals=favMeals)
+    conn.commit()
+
+    #conn4 = sqlite3.connect("Database.db")
+    #c4 = conn4.cursor()
+    mealIds = c.execute(''' 
+    SELECT * FROM MealIngredients;
+    ''').fetchall()
+    mealInfo = dict()
+    for entry in mealIds:
+        mealInfo[entry[0]] = []
+    for entry in mealIds:
+        mealInfo[entry[0]].append(entry[1])
+    print(mealInfo) #PERFECT
+    conn.commit()
+
+    #conn5 = sqlite3.connect("Database.db")
+    #c5 = conn5.cursor()
+    userIngredients = c.execute('''
+    SELECT * FROM UserIngredients;
+    ''').fetchall()
+
+    userInfo = dict()
+    for entry in userIngredients:
+        userInfo[entry[0]] = []
+    for value in userIngredients:
+        userInfo[value[0]].append(value[1])
+    print(userInfo) #GOOD
+    conn.commit()
+
+    conn6 = sqlite3.connect("Database.db")
+    c6 = conn6.cursor()
+
+    added = dict()
+    for user in userInfo:
+        added[user] = []
+
+    for user in userInfo:
+        for meal in mealInfo:
+            valid = True
+            for ing in mealInfo[meal]:
+                if ing not in userInfo[user]:
+                    print(f'could not find {ing} in {userInfo[user]}')
+                    valid = False
+            if valid and meal not in added[user]:
+                added[user].append(meal)
+                c6.execute('''
+                INSERT INTO UserMealOptions(user_id, meal_id) VALUES (?, ?)
+                ''', (user, meal))
+                print(f'user {user} can make meal {meal}')
+    conn6.commit()
+
+    userOptions = c6.execute('''
+    SELECT DISTINCT name, image, description FROM Meal JOIN UserMealOptions on Meal.id = UserMealOptions.meal_id
+    WHERE user_id = ?
+    ''', (session['uid'],))
+
+    return render_template("user_daily_plan.html", rows=rows, mealIngs=mealIngs, favMeals=favMeals, userOptions=userOptions)
 
 @app.route("/favorite/", methods=["POST"])
 def add_favorite_meal():

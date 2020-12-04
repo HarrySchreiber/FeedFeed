@@ -31,22 +31,13 @@
             <h2> My Plan </h2>
             <table class="table">
                 <tbody>
-                    {%for entry in rows%}
+                    {%for entry in userOptions%}
                     <tr>
-                        <td class="meal-image"> <img src={{entry[2]}}> </td>
+                        <td class="meal-image"> <img src={{entry[1]}}> </td>
                         <td>
                             <h3> {{entry[0]}} </h3>
                             <h5> Description: </h5>
-                            <p> {{entry[3]}} </p>
-                            <p> This meal serves {{entry[4]}} and has {{entry[5]}} calories per serving. </p>
-                            <h5> Ingredients: </h5>
-                            <ul>
-                                {%for row in mealIngs%}
-                                {%if row[0] == entry[1]%}
-                                <li>{{row[9]}}</li>
-                                {%endif%}
-                                {%endfor%}                    
-                            </ul>
+                            <p> {{entry[2]}} </p>
                         </td>
                     </tr>
                     {%endfor%}
