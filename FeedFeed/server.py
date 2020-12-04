@@ -153,6 +153,9 @@ def signup_get():
 
 @app.route("/signup/info/",methods=["GET"])
 def signup_info_get():
+    if(session.get("email") is None or session.get("password") is None):
+        flash("Please follow the signup process procedurally")
+        return redirect(url_for("login_get"))
     return render_template("user_info_signup.html")
 
 @app.route("/signup/info/",methods=["POST"])
@@ -207,6 +210,9 @@ def signup_info_post():
 
 @app.route("/signup/goals/",methods=["GET"])
 def signup_goals_get():
+    if(session.get("name") is None or session.get("date-of-birth") is None or session.get("height-feet") is None or session.get("height-inches") is None or session.get("weight") is None or session.get("gender") is None):
+        flash("Please follow the signup process procedurally")
+        return redirect(url_for("login_get"))
     return render_template("goals_signup.html")
 
 @app.route("/signup/goals/",methods=["POST"])
