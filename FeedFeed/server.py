@@ -233,7 +233,21 @@ def signup_goals_post():
         VALUES (?,?,?,?,?,?,?,?,?,?);
     """,(session.get("email"),session.get("password"),session.get("name"),session.get("date-of-birth"),session.get("height-feet"),session.get("height-inches"),session.get("weight"),session.get("gender"),session.get("weight-goal"),session.get("exercise-goal")))
     get_db().commit()
-    return redirect(url_for("get_user_home"))
+
+    user = c.execute("""
+        SELECT id FROM User WHERE email=?;
+    """,(session.get("email").lower(),)).fetchone()
+
+    if user is not None:
+        expires = datetime.utcnow()+timedelta(hours=24)
+        session["uid"] = user[0]
+        session["expires"] = expires.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return redirect(url_for("get_user_home"))
+    
+    flash("Something Went Wrong")
+    return redirect(url_for("signup_goals_get"))
+
+    
 
 @app.route("/dash/")
 def adminHome():
