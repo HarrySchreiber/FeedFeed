@@ -17,26 +17,23 @@
                 <input type="text" id="search_text" placeholder="Search Ingredients">
                 <button type="submit" id="search">Submit</button>
             </div>
-            <table id="table">
-                {%for entry in rows%}
-                <tr value="{{entry[6]}}">
-                    <td> <input class="check" type="checkbox" name="ing" id="f-add-ingredient" value="{{entry[6]}}" /> </td>
-                    <td class="ingName"> <h3> {{entry[6]}} </h3> </td>
-                </tr>
-                {%endfor%}
-            </table>
+            <div class="tabletoscroll">
+                <table id="table">
+                    {%for entry in rows%}
+                    <tr value="{{entry[6]}}">
+                        <td> <input class="check" type="checkbox" name="ing" id="f-add-ingredient" value="{{entry[6]}}" /> </td>
+                        <td class="ingName"> <h3> {{entry[6]}} </h3> </td>
+                    </tr>
+                    {%endfor%}
+                </table>
+            </div>
         </div>
         <div class="col-lg" id="my_ingredients">
             <h2> My Ingredients </h2>
-            <table id="table2">
-                {%for ingredient in ingredients%}
-                <tr class="data" value="{{ingredient[0]}}">
-                    <td> <h3> <input class="check2" type="checkbox" name="ing" id="f-add-ingredient" value="{{ingredient[0]}}" /> {{ingredient[0]}} </h3> </td>
-                    <!--<td class="ingName"> <h3> {{ingredient[0]}} </h3> </td>-->
-                </tr>
-                {%endfor%}
-            </table>
             <ul id="ingList">
+                {%for ingredient in ingredients%}
+                <li> {{ingredient[0]}} </li>
+                {%endfor%}
             </ul>
         </div>
     </div>

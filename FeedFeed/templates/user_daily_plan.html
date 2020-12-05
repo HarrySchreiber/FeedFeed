@@ -12,37 +12,41 @@
     <div class="row">
         <div class="col-lg" id="search">
             <h2> Favorite Meals </h2>
-            <table class="favorite-table">
-                <tbody>
-                    {%for value in favMeals%}
-                    <tr>
-                        <td> <img src={{value[4]}}> </td>
-                        <td>
-                            <h3>{{value[2]}}</h3>
-                            <h5>Description:</h5>
-                            <p>{{value[5]}}</p>
-                        </td>
-                    </tr>
-                    {%endfor%}
-                </tbody>
-            </table> 
+            <div class="my_plan">
+                <table class="favorite-table">
+                    <tbody>
+                        {%for value in favMeals%}
+                        <tr>
+                            <td> <img src={{value[4]}}> </td>
+                            <td>
+                                <h3>{{value[2]}}</h3>
+                                <h5>Description:</h5>
+                                <p>{{value[5]}}</p>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table> 
+            </div>
         </div>
         <div class="col-lg" id="search">
             <h2> My Plan </h2>
-            <table class="table">
-                <tbody>
-                    {%for entry in userOptions%}
-                    <tr>
-                        <td class="meal-image"> <img src={{entry[1]}}> </td>
-                        <td>
-                            <h3> {{entry[0]}} </h3>
-                            <h5> Description: </h5>
-                            <p> {{entry[2]}} </p>
-                        </td>
-                    </tr>
-                    {%endfor%}
-                </tbody>
-            </table>
+            <div class="my_plan">
+                <table class="table">
+                    <tbody>
+                        {%for entry in userOptions%}
+                        <tr>
+                            <td class="meal-image"> <img src={{entry[1]}}> </td>
+                            <td>
+                                <h3> {{entry[0]}} </h3>
+                                <h5> Description: </h5>
+                                <p> {{entry[2]}} </p>
+                            </td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <form method="post" action="/dailyplan/">

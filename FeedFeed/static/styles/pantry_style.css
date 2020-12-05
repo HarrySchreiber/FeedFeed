@@ -28,3 +28,9 @@ table {
 .search-bar {
     text-align: center;
 }
+
+.tabletoscroll {
+    height: 500px;
+    overflow-y: scroll;
+    margin-top: 3%
+}
