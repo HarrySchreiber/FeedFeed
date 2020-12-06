@@ -241,9 +241,9 @@ def signup_goals_post():
         return redirect(url_for("signup_get"))
     c = get_db().cursor()
     c.execute("""
-        INSERT INTO User (email,password,name,dob,height_feet,height_inches,weight,gender,weight_goal,exercise_goal)
-        VALUES (?,?,?,?,?,?,?,?,?,?);
-    """,(session.get("email"),session.get("password"),session.get("name"),session.get("date-of-birth"),session.get("height-feet"),session.get("height-inches"),session.get("weight"),session.get("gender"),session.get("weight-goal"),session.get("exercise-goal")))
+        INSERT INTO User (email,password,name,dob,height_feet,height_inches,weight,gender,weight_goal,exercise_goal,isadmin)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?);
+    """,(session.get("email"),session.get("password"),session.get("name"),session.get("date-of-birth"),session.get("height-feet"),session.get("height-inches"),session.get("weight"),session.get("gender"),session.get("weight-goal"),session.get("exercise-goal"), "0"))
     get_db().commit()
 
     user = c.execute("""
