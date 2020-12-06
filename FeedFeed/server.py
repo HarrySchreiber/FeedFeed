@@ -55,8 +55,16 @@ def close_connection(exception):
 #Routes
 @app.route("/",methods=["GET"])
 def root():
-    #TODO: Set this admin flag forreal
     admin_flag = False
+
+    if session.get("uid") is not None:
+        isAdmin = c.execute("""
+            SELECT isadmin FROM User WHERE id == ?
+        """, (session.get("uid"),)).fetchone()
+
+        admin_flag = int(isAdmin[0]) == 1
+
+    
     if(admin_flag):
         return redirect(url_for("adminHome"))
     if(session.get("uid") is not None):
@@ -100,6 +108,16 @@ def login_post():
         expires = datetime.utcnow()+timedelta(hours=24)
         session["uid"] = user[0]
         session["expires"] = expires.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        admin_flag = False
+        if session.get("uid") is not None:
+            isAdmin = c.execute("""
+                SELECT isadmin FROM User WHERE id == ?
+            """, (session.get("uid"),)).fetchone()
+            admin_flag = int(isAdmin[0]) == 1
+
+        if admin_flag:
+            return redirect(url_for("adminHome"))
         return redirect(url_for("get_user_home"))
     
     flash("Username or Password does not match")
@@ -263,12 +281,22 @@ def signup_goals_post():
 
 @app.route("/dash/")
 def adminHome():
-    #TODO: Set this admin flag forreal
-    admin_flag = True
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
+    #Get db cursor
+    c = get_db().cursor()
+    
+    isAdmin = c.execute("""
+        SELECT isadmin FROM User WHERE id == ?
+    """, (session.get("uid"),)).fetchone()
+    
+    admin_flag = int(isAdmin[0]) == 1
+    
     if(not admin_flag):
         flash("Restricted Access")
         return redirect(url_for("login_get"))
-    #Until we get user logins and db implementation, placeholder data will be used for testing/viewing styling
+
     return render_template("admin_home.html",
                             username="Administrator",
                             uiSectionName="Home",
@@ -276,14 +304,23 @@ def adminHome():
 
 @app.route("/dash/meals/")
 def adminMealManager():
-    #TODO: Set this admin flag forreal
-    admin_flag = True
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
+    #Get db cursor
+    c = get_db().cursor()
+    
+    isAdmin = c.execute("""
+        SELECT isadmin FROM User WHERE id == ?
+    """, (session.get("uid"),)).fetchone()
+    
+    admin_flag = int(isAdmin[0]) == 1
+    
     if(not admin_flag):
         flash("Restricted Access")
         return redirect(url_for("login_get"))
-    mealData = dict()
 
-    c = get_db().cursor()
+    mealData = dict()
 
     t = c.execute("""
         SELECT id, name, description, image, serves, calories_per_serving FROM Meal;
@@ -301,16 +338,25 @@ def adminMealManager():
 
 @app.route("/dash/meals/edit/", methods=["GET"])
 def adminEditMeal():
-    #TODO: Set this admin flag forreal
-    admin_flag = True
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
+    #Get db cursor
+    c = get_db().cursor()
+    
+    isAdmin = c.execute("""
+        SELECT isadmin FROM User WHERE id == ?
+    """, (session.get("uid"),)).fetchone()
+    
+    admin_flag = int(isAdmin[0]) == 1
+    
     if(not admin_flag):
         flash("Restricted Access")
         return redirect(url_for("login_get"))
+
     ingData = dict()
 
     args = request.args
-
-    c = get_db().cursor()
 
     #If an action was specified and valid, use that. Otherwise, "New"
     if "action" in args:
@@ -387,13 +433,22 @@ def adminEditMeal():
 
 @app.route("/dash/meals/edit/", methods=["POST"])
 def adminEditMealPost():
-    #TODO: Set this admin flag forreal
-    admin_flag = True
-    if(not admin_flag):
-        flash("Restricted Access")
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
         return redirect(url_for("login_get"))
     #Get db cursor
     c = get_db().cursor()
+    
+    isAdmin = c.execute("""
+        SELECT isadmin FROM User WHERE id == ?
+    """, (session.get("uid"),)).fetchone()
+    
+    admin_flag = int(isAdmin[0]) == 1
+    
+    if(not admin_flag):
+        flash("Restricted Access")
+        return redirect(url_for("login_get"))
+    
 
     mealData = dict()
     ingData = dict()
@@ -541,14 +596,23 @@ def adminEditMealPost():
 #Displays all the ingredients in the database in a readable format and provides management options
 @app.route("/dash/ingredients/")
 def adminIngredientManager():
-    #TODO: Set this admin flag forreal
-    admin_flag = True
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
+    #Get db cursor
+    c = get_db().cursor()
+    
+    isAdmin = c.execute("""
+        SELECT isadmin FROM User WHERE id == ?
+    """, (session.get("uid"),)).fetchone()
+    
+    admin_flag = int(isAdmin[0]) == 1
+    
     if(not admin_flag):
         flash("Restricted Access")
         return redirect(url_for("login_get"))
-    ingData = dict()
 
-    c = get_db().cursor()
+    ingData = dict()
 
     t = c.execute("""
         SELECT id, name, calories, protein, carbs, fat FROM Ingredient;
@@ -566,11 +630,22 @@ def adminIngredientManager():
 
 @app.route("/dash/ingredients/edit/", methods=["GET"])
 def adminEditIngredient():
-    #TODO: Set this admin flag forreal
-    admin_flag = True
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
+    #Get db cursor
+    c = get_db().cursor()
+    
+    isAdmin = c.execute("""
+        SELECT isadmin FROM User WHERE id == ?
+    """, (session.get("uid"),)).fetchone()
+    
+    admin_flag = int(isAdmin[0]) == 1
+    
     if(not admin_flag):
         flash("Restricted Access")
         return redirect(url_for("login_get"))
+
     args = request.args
 
     #If an action was specified and valid, use that. Otherwise, "New"
@@ -615,13 +690,21 @@ def adminEditIngredient():
 
 @app.route("/dash/ingredients/edit/", methods=["POST"])
 def adminEditIngredientPost():
-    #TODO: Set this admin flag forreal
-    admin_flag = True
-    if(not admin_flag):
-        flash("Restricted Access")
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
         return redirect(url_for("login_get"))
     #Get db cursor
     c = get_db().cursor()
+    
+    isAdmin = c.execute("""
+        SELECT isadmin FROM User WHERE id == ?
+    """, (session.get("uid"),)).fetchone()
+    
+    admin_flag = int(isAdmin[0]) == 1
+    
+    if(not admin_flag):
+        flash("Restricted Access")
+        return redirect(url_for("login_get"))
 
     #Validation
     data = dict()
@@ -747,12 +830,21 @@ def adminEditIngredientPost():
 
 @app.route("/dash/ingredients/remove/", methods=["POST"])
 def adminRemoveIngredientPost():
-    #TODO: Set this admin flag forreal
-    admin_flag = True
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
+    #Get db cursor
+    c = get_db().cursor()
+    
+    isAdmin = c.execute("""
+        SELECT isadmin FROM User WHERE id == ?
+    """, (session.get("uid"),)).fetchone()
+    
+    admin_flag = int(isAdmin[0]) == 1
+    
     if(not admin_flag):
         flash("Restricted Access")
         return redirect(url_for("login_get"))
-    c = get_db().cursor()
 
     ingId = request.get_json()["itemId"]
 
@@ -783,12 +875,21 @@ def adminRemoveIngredientPost():
 
 @app.route("/dash/meals/remove/", methods=["POST"])
 def adminRemoveMealPost():
-    #TODO: Set this admin flag forreal
-    admin_flag = True
+    if(session.get("uid") is None):
+        flash("Must Sign Into an Account")
+        return redirect(url_for("login_get"))
+    #Get db cursor
+    c = get_db().cursor()
+    
+    isAdmin = c.execute("""
+        SELECT isadmin FROM User WHERE id == ?
+    """, (session.get("uid"),)).fetchone()
+    
+    admin_flag = int(isAdmin[0]) == 1
+    
     if(not admin_flag):
         flash("Restricted Access")
         return redirect(url_for("login_get"))
-    c = get_db().cursor()
 
     mealId = request.get_json()["itemId"]
 
