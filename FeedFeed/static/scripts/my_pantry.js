@@ -46,7 +46,6 @@ function search() {
 }
 
 function generateRequest() {
-    console.log(myArray);
     const comment = {
         "values": myArray
     };

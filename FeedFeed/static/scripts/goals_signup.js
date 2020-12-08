@@ -15,7 +15,6 @@ window.addEventListener("DOMContentLoaded", function() {
             e.preventDefault();
             alert("Must only have 1 weight goal selected");
         }
-        console.log(exercise_goal_box.value);
 
 
         if(exercise_goal_box.value != "1.2" && exercise_goal_box.value != "1.375" && exercise_goal_box.value != "1.55" && exercise_goal_box.value != "1.725" && exercise_goal_box.value != "1.9"){
