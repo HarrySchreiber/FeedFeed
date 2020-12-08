@@ -297,10 +297,22 @@ def adminHome():
         flash("Restricted Access")
         return redirect(url_for("login_get"))
 
+    userIngData = c.execute("""
+        SELECT name, ingredient, freq from Ingredient 
+        JOIN (SELECT ingredient, COUNT(ingredient) freq FROM UserIngredients GROUP BY ingredient) on id=ingredient;
+    """).fetchall()
+
+    mealIngData = c.execute("""
+        SELECT name, ingredient_id, freq from Ingredient 
+        JOIN (SELECT ingredient_id, COUNT(ingredient_id) freq FROM MealIngredients GROUP BY ingredient_id) on id=ingredient_id;
+    """).fetchall()
+
     return render_template("admin_home.html",
                             username="Administrator",
                             uiSectionName="Home",
-                            showBackButton=False)
+                            showBackButton=False,
+                            userIngData=userIngData,
+                            mealIngData=mealIngData)
 
 @app.route("/dash/meals/")
 def adminMealManager():
