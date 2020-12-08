@@ -7,26 +7,34 @@ window.addEventListener("DOMContentLoaded", function() {
 
     var userData = {
         datasets: [{
-            data: []
+            data: [],
+            backgroundColor: palette(['tol', 'qualitative'], userDataElem.length).map(function(hex) {
+                return '#' + hex;
+              })
         }],
         labels:[]
     };
     var mealData = {
         datasets: [{
-            data: []
+            data: [],
+            backgroundColor: palette(['tol', 'qualitative'], mealDataElem.length).map(function(hex) {
+                return '#' + hex;
+              })
         }],
         labels:[]
     };
 
     for (d of userDataElem) {
         userData.labels.push(d.getAttribute("data-name"));
-        userData.datasets.data.push(getAttribute("data-count"));
+        userData.datasets[0].data.push(parseInt(d.getAttribute("data-count")));
     }
 
     for (d of mealDataElem) {
         mealData.labels.push(d.getAttribute("data-name"));
-        mealData.datasets.data.push(getAttribute("data-count"));
+        mealData.datasets[0].data.push(parseInt(d.getAttribute("data-count")));
     }
+
+    console.log(mealData.backgroundColor);
 
     constructPie(userDataChart, userData);
     constructPie(mealDataChart, mealData);
@@ -35,8 +43,13 @@ window.addEventListener("DOMContentLoaded", function() {
 
 function constructPie(elem, data) {
     var myPieChart = new Chart(elem, {
-        type: 'pie',
+        type: 'doughnut',
         data: data,
-        options: options
+        options: {
+            responsive: true,
+            legend: {
+                display: false
+            }
+        }
     });
 }

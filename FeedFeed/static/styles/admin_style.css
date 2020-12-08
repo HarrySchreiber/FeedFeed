@@ -16,6 +16,10 @@
     transition-duration: 0.5s;
 }
 
+.chartView {
+    border: 2px #000000 solid;
+}
+
 .categoryLink-tall:hover,
 .categoryLink-short:hover {
     background-color: #dddddd;
