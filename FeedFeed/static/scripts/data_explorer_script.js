@@ -79,7 +79,6 @@ function deleteAllSelected(elt) {
     let type = elt.getAttribute("data-delete")
 
     for (id of itemsSelected) {
-        console.log("Id to delete: " + id);
         // create a new XMLHttpRequest
         xhr = new XMLHttpRequest();
 
@@ -90,7 +89,6 @@ function deleteAllSelected(elt) {
             xhr.open("POST", "/dash/ingredients/remove/");
         }
         else {
-            console.log("Error no item type defined");
             return;
         }
         
