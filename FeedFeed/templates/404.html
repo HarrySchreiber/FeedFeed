@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        img{
+            width: 20em;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -210%);
+        }
+
+        h2{
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+        a{
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, 100%);
+        }
+
+        body{
+            background-color: #007bff;
+        }
+        .container{
+            height: 10em;
+            width: 30em;
+            background-color: white;
+            -webkit-box-shadow: 0px 0px 5px 3px rgba(0,0,0,.5);
+            -moz-box-shadow: 0px 0px 5px 3px rgba(0,0,0,.5);
+            box-shadow: 0px 0px 5px 3px rgba(0,0,0,.5);
+        }
+        
+        
+        .center {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <img src="/static/images/feedfeedlogo.png" alt="Feed Feed Logo">
+    <div class="container center">
+        <h2 class="text-center">Page Not Found</h2>
+        <a href="{{url_for('login_get')}}">Click here to return to site</a>
+    </div>
+</body>
+</html>
