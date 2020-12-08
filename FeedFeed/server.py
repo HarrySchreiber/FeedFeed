@@ -949,6 +949,13 @@ def get_user_goals():
         weight = entry[7]
         weightGoal = entry[9]
         exerciseGoal = entry[10]
+    if weightGoal == "cut":
+        calorieIntake = "less than"
+    elif weightGoal == "maintain":
+        calorieIntake = "exactly"
+    else:
+        calorieIntake = "more than"
+    bmr = int(13.397*weight + 4.8*((12*heightFeet) + heightInches) - 5*21)
     return render_template(
         "user_goals.html", 
         name=name, 
@@ -957,7 +964,9 @@ def get_user_goals():
         heightInches=heightInches, 
         weight=weight, 
         weightGoal=weightGoal, 
-        exerciseGoal=exerciseGoal
+        exerciseGoal=exerciseGoal,
+        calorieIntake=calorieIntake,
+        bmr=bmr
     )
 
 @app.route("/mygoals/save/", methods=["POST"])
