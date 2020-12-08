@@ -1,6 +1,5 @@
-#TODO: I'm pretty sure this is how were going to host our app, but I could be jumping the gun so not sure we'll use this
 import os
-from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort #TODO: Not sure all of these are nesessary yet, but well find out
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g, abort 
 import sqlite3
 import base64
 import re
@@ -239,7 +238,6 @@ def signup_goals_post():
     if request.form.get("weight-goal") is None or request.form.get("weight-goal")=="":
         flash("Must provide a weight goal")
         return redirect(url_for("signup_goals_get"))
-    print(request.form.get("weight-goal"))
     if request.form.get("weight-goal") != "cut" and request.form.get("weight-goal") != "maintain" and request.form.get("weight-goal") != "bulk":
         flash("Weight Goal must be either cut, maintain, or bulk")
         return redirect(url_for("signup_goals_get"))
@@ -428,8 +426,6 @@ def adminEditMeal():
             """, (mealId,)).fetchone()
 
             currentMeal = Meal(mealInfo[0], mealInfo[1], mealInfo[2], mealInfo[3], mealInfo[4], mealInfo[5], mealIngs)
-
-            print(currentMeal.ingredients)
 
             return render_template("admin_edit_meal.html",
                                     username="Administrator",
@@ -953,7 +949,6 @@ def get_user_goals():
         weight = entry[7]
         weightGoal = entry[9]
         exerciseGoal = entry[10]
-    print(exerciseGoal)
     return render_template(
         "user_goals.html", 
         name=name, 
@@ -1007,7 +1002,6 @@ def save_ingredients():
     for value in result['values']:
         row = c.execute(''' SELECT id FROM Ingredient WHERE name LIKE ?; ''', (value,)).fetchone()
         for entry in row: 
-            print(entry)
             c.execute(''' INSERT INTO UserIngredients(user, ingredient) VALUES (?, ?); ''', (session['uid'], entry))
             conn.commit()
     return redirect(url_for("get_user_pantry"))
@@ -1077,7 +1071,6 @@ def post_daily_plan():
             valid = True
             for ing in mealInfo[meal]:
                 if ing not in userInfo[user]:
-                    print(f'could not find {ing} in {userInfo[user]}')
                     valid = False
             if valid and meal not in added[user]:
                 added[user].append(meal)
@@ -1096,7 +1089,6 @@ def post_daily_plan():
 @app.route("/favorite/", methods=["POST"])
 def add_favorite_meal():
     meal_id = request.form.get("name")
-    print(meal_id)
     conn = sqlite3.connect("Database.db")
     c = conn.cursor()
     insert = c.execute(''' 
