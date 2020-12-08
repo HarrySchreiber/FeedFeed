@@ -1096,3 +1096,7 @@ def add_favorite_meal():
     ''', (session['uid'], meal_id))
     conn.commit()
     return redirect(url_for("get_user_home"))
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("404.html")
