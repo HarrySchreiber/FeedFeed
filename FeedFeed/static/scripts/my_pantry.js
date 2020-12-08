@@ -34,7 +34,7 @@ function search() {
     let ingredients = document.querySelectorAll("tr");
     let term = document.getElementById("search_text").value;
     for(i = 0; i < ingredients.length; i++) {
-        if(!ingredients[i].innerText.includes(term)) {
+        if(!ingredients[i].innerText.toLowerCase().includes(term.toLowerCase())) {
             ingredients[i].style.display = "none";
         }
     }
