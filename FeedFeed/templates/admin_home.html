@@ -1,8 +1,28 @@
 {% extends "admin_base.html" %}
 
+{% block resources %}
+{{super()}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="/static/scripts/homeCharts.js"></script>
+{% endblock %}
+
 {% block main %}
 <div class="container">
     <h1 class="text-center py-3">Admin Home</h1>
+    <div class="row mx-auto maxWidth-1000">
+        <div class="col">
+            <canvas id="userIngredients"></canvas>
+            {{% for ing in userIngData %}}
+                <meta class="uIngData" data-name="{{ing[0]}}" data-count="{{ing[2]}}"/>
+            {{% endfor %}}
+        </div>
+        <div class="col">
+            <canvas id="mealIngredients"></canvas>
+            {{% for ing in mealIngData %}}
+                <meta class="mIngData" data-name="{{ing[0]}}" data-count="{{ing[2]}}"/>
+            {{% endfor %}}
+        </div>
+    </div>
     <div class="row mx-auto maxWidth-1000">
         <div class="col categoryLink-tall m-1">
             <a class="stretched-link" href="{{url_for('adminMealManager')}}">Manage Meals</a>
